@@ -1,0 +1,6 @@
+node_modules
+.umi
+# 三个 npm run build 后的产物目录
+dist
+es
+lib
