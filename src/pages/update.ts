@@ -13,9 +13,9 @@ const update = (defaultAssets: GIAssets, defaultConfig: GIConfig, defaultEngine)
     ...defaultAssets,
     components: {
       ...defaultAssets.components,
-      // 将自定义组件加入到资产包中
-      Counter, // 如果资产id和文件名一致，可以这样简写，因为实际是这样的： [Counter.info.id]: Counter,
-      XlabLayout,
+      // // 将自定义组件加入到资产包中
+      // Counter, // 如果资产id和文件名一致，可以这样简写，因为实际是这样的： [Counter.info.id]: Counter,
+      // XlabLayout,
     },
   };
 
@@ -24,34 +24,37 @@ const update = (defaultAssets: GIAssets, defaultConfig: GIConfig, defaultEngine)
     ...defaultConfig,
     components: [
       ...defaultConfig.components,
-      {
-        id: 'Counter',
-        type: 'AUTO',
-        props: {},
-      },
-      {
-        id: 'XlabLayout',
-        type: 'GICC_LAYOUT',
-        props: {
-          containers: [],
-        },
-      },
+      // {
+      //   id: 'Counter',
+      //   type: 'AUTO',
+      //   props: {},
+      // },
+      // {
+      //   id: 'XlabLayout',
+      //   type: 'GICC_LAYOUT',
+      //   props: {
+      //     containers: [],
+      //   },
+      // },
     ],
   };
 
   /** 更新引擎服务 */
-  const engine = [...defaultEngine, MyServer];
+  const engine = [
+    ...defaultEngine,
+    // MyServer
+  ];
 
   /** 更新服务的配置 */
-  config.components.forEach(item => {
-    if (item.id === 'Initializer') {
-      //改写服务的ID
-      //@ts-ignore
-      item.props.serviceId = `${MyServer.id}/GI_SERVICE_INTIAL_GRAPH`;
-      //@ts-ignore
-      item.props.schemaServiceId = `${MyServer.id}/GI_SERVICE_SCHEMA`;
-    }
-  });
+  //config.components.forEach(item => {
+  //  if (item.id === 'Initializer') {
+  //    //改写服务的ID
+  //    //@ts-ignore
+  //    item.props.serviceId = `${MyServer.id}/GI_SERVICE_INTIAL_GRAPH`;
+  //    //@ts-ignore
+  //    item.props.schemaServiceId = `${MyServer.id}/GI_SERVICE_SCHEMA`;
+  //  }
+  //});
 
   return {
     assets,

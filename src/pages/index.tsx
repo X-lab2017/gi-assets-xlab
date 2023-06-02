@@ -67,7 +67,7 @@ const MyGraphApp = () => {
   return (
     <div style={{ height: '100vh' }}>
       <ThemeSwitch style={{ visibility: 'hidden' }} />
-      <ServerView />
+      {/* <ServerView /> */}
       {/** @ts-ignore */}
       <GISDK config={config} assets={assets} services={services} />
     </div>
