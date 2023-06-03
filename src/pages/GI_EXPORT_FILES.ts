@@ -1,20 +1,637 @@
+/** 动态请求需要的配套资产 **/
+export const GI_ASSETS_PACKAGE = [
+  {
+    name: '@antv/gi-assets-janusgraph',
+    version: '1.0.1',
+    url: 'https://gw.alipayobjects.com/os/lib/antv/gi-assets-janusgraph/1.0.1/dist/index.min.js',
+    global: 'GI_ASSETS_JANUSGRAPH',
+  },
+  {
+    name: 'gi-assets-xlab',
+    version: '0.1.0',
+    global: 'GI_ASSETS_XLAB',
+    url: 'http://127.0.0.1:9527/index.min.js',
+  },
+  {
+    name: '@antv/gi-assets-hugegraph',
+    version: '1.0.4',
+    url: 'https://gw.alipayobjects.com/os/lib/antv/gi-assets-hugegraph/1.0.4/dist/index.min.js',
+    global: 'GI_ASSETS_HUGEGRAPH',
+  },
+  {
+    name: '@antv/gi-assets-galaxybase',
+    version: '1.1.4',
+    url: 'https://gw.alipayobjects.com/os/lib/antv/gi-assets-galaxybase/1.1.4/dist/index.min.js',
+    global: 'GI_ASSETS_GALAXYBASE',
+  },
+  {
+    name: '@antv/gi-assets-neo4j',
+    version: '2.0.4',
+    url: 'https://gw.alipayobjects.com/os/lib/antv/gi-assets-neo4j/2.0.4/dist/index.min.js',
+    global: 'GI_ASSETS_NEO4J',
+  },
+  {
+    name: '@antv/gi-assets-graphscope',
+    version: '2.0.8',
+    url: 'https://gw.alipayobjects.com/os/lib/antv/gi-assets-graphscope/2.0.8/dist/index.min.js',
+    global: 'GI_ASSETS_GRAPHSCOPE',
+  },
+  {
+    name: '@antv/gi-assets-tugraph',
+    version: '2.0.5',
+    url: 'https://gw.alipayobjects.com/os/lib/antv/gi-assets-tugraph/2.0.5/dist/index.min.js',
+    global: 'GI_ASSETS_TUGRAPH',
+  },
+  {
+    name: '@antv/gi-assets-advance',
+    version: '2.4.2',
+    url: 'https://gw.alipayobjects.com/os/lib/antv/gi-assets-advance/2.4.2/dist/index.min.js',
+    global: 'GI_ASSETS_ADVANCE',
+  },
+  {
+    name: '@antv/gi-assets-basic',
+    version: '2.3.3',
+    url: 'https://gw.alipayobjects.com/os/lib/antv/gi-assets-basic/2.3.3/dist/index.min.js',
+    global: 'GI_ASSETS_BASIC',
+  },
+  {
+    name: '@antv/gi-assets-scene',
+    version: '2.1.2',
+    url: 'https://gw.alipayobjects.com/os/lib/antv/gi-assets-scene/2.1.2/dist/index.min.js',
+    global: 'GI_ASSETS_SCENE',
+  },
+];
+
 /** G6VP 站点自动生成的配置 **/
 export const GI_PROJECT_CONFIG = {
-  nodes: [],
-  edges: [],
+  nodes: [
+    {
+      id: 'SimpleNode',
+      props: {
+        size: 26,
+        color: '#ddd',
+        label: [],
+      },
+      name: '官方节点',
+      order: -1,
+      expressions: [],
+      logic: true,
+      groupName: '默认样式',
+    },
+    {
+      id: 'SimpleNode',
+      props: {
+        size: 26,
+        color: '#3056E3',
+        label: ['github_actor^^name'],
+      },
+      name: '官方节点',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'github_actor',
+        },
+      ],
+      order: 0,
+      logic: true,
+      groupName: 'GITHUB_ACTOR TYPE',
+    },
+    {
+      id: 'SimpleNode',
+      props: {
+        size: 26,
+        color: '#faad14',
+        label: ['license^^name'],
+      },
+      name: '官方节点',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'license',
+        },
+      ],
+      order: 1,
+      logic: true,
+      groupName: 'LICENSE TYPE',
+    },
+    {
+      id: 'SimpleNode',
+      props: {
+        size: 26,
+        color: '#a0d911',
+        label: ['github_change_request^^name'],
+      },
+      name: '官方节点',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'github_change_request',
+        },
+      ],
+      order: 2,
+      logic: true,
+      groupName: 'GITHUB_CHANGE_REQUEST TYPE',
+    },
+    {
+      id: 'SimpleNode',
+      props: {
+        size: 26,
+        color: '#f5222d',
+        label: ['language^^name'],
+      },
+      name: '官方节点',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'language',
+        },
+      ],
+      order: 3,
+      logic: true,
+      groupName: 'LANGUAGE TYPE',
+    },
+    {
+      id: 'SimpleNode',
+      props: {
+        size: 26,
+        color: '#722ed1',
+        label: ['github_issue^^name'],
+      },
+      name: '官方节点',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'github_issue',
+        },
+      ],
+      order: 4,
+      logic: true,
+      groupName: 'GITHUB_ISSUE TYPE',
+    },
+    {
+      id: 'SimpleNode',
+      props: {
+        size: 26,
+        color: '#eb2f96',
+        label: ['github_repo^^name'],
+      },
+      name: '官方节点',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'github_repo',
+        },
+      ],
+      order: 5,
+      logic: true,
+      groupName: 'GITHUB_REPO TYPE',
+    },
+    {
+      id: 'SimpleNode',
+      props: {
+        size: 26,
+        color: '#2f54eb',
+        label: ['issue_label^^name'],
+      },
+      name: '官方节点',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'issue_label',
+        },
+      ],
+      order: 6,
+      logic: true,
+      groupName: 'ISSUE_LABEL TYPE',
+    },
+    {
+      id: 'SimpleNode',
+      props: {
+        size: 26,
+        color: '#13c2c2',
+        label: ['github_org^^name'],
+      },
+      name: '官方节点',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'github_org',
+        },
+      ],
+      order: 7,
+      logic: true,
+      groupName: 'GITHUB_ORG TYPE',
+    },
+  ],
+  edges: [
+    {
+      id: 'SimpleEdge',
+      props: {
+        size: 1,
+        color: '#ddd',
+        label: [],
+      },
+      name: '官方边',
+      order: -1,
+      expressions: [],
+      logic: true,
+      groupName: '默认样式',
+    },
+    {
+      id: 'SimpleEdge',
+      props: {
+        size: 1,
+        color: '#ddd',
+        label: [],
+      },
+      name: '官方边',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'has_issue_label',
+        },
+      ],
+      order: 0,
+      logic: true,
+      groupName: 'HAS_ISSUE_LABEL TYPE',
+    },
+    {
+      id: 'SimpleEdge',
+      props: {
+        size: 1,
+        color: '#ddd',
+        label: [],
+      },
+      name: '官方边',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'has_issue_label',
+        },
+      ],
+      order: 1,
+      logic: true,
+      groupName: 'HAS_ISSUE_LABEL TYPE',
+    },
+    {
+      id: 'SimpleEdge',
+      props: {
+        size: 1,
+        color: '#ddd',
+        label: [],
+      },
+      name: '官方边',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'has_repo',
+        },
+      ],
+      order: 2,
+      logic: true,
+      groupName: 'HAS_REPO TYPE',
+    },
+    {
+      id: 'SimpleEdge',
+      props: {
+        size: 1,
+        color: '#ddd',
+        label: [],
+      },
+      name: '官方边',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'has_language',
+        },
+      ],
+      order: 3,
+      logic: true,
+      groupName: 'HAS_LANGUAGE TYPE',
+    },
+    {
+      id: 'SimpleEdge',
+      props: {
+        size: 1,
+        color: '#ddd',
+        label: [],
+      },
+      name: '官方边',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'review',
+        },
+      ],
+      order: 4,
+      logic: true,
+      groupName: 'REVIEW TYPE',
+    },
+    {
+      id: 'SimpleEdge',
+      props: {
+        size: 1,
+        color: '#ddd',
+        label: [],
+      },
+      name: '官方边',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'has_license',
+        },
+      ],
+      order: 5,
+      logic: true,
+      groupName: 'HAS_LICENSE TYPE',
+    },
+    {
+      id: 'SimpleEdge',
+      props: {
+        size: 1,
+        color: '#ddd',
+        label: [],
+      },
+      name: '官方边',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'comment',
+        },
+      ],
+      order: 6,
+      logic: true,
+      groupName: 'COMMENT TYPE',
+    },
+    {
+      id: 'SimpleEdge',
+      props: {
+        size: 1,
+        color: '#ddd',
+        label: [],
+      },
+      name: '官方边',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'comment',
+        },
+      ],
+      order: 7,
+      logic: true,
+      groupName: 'COMMENT TYPE',
+    },
+    {
+      id: 'SimpleEdge',
+      props: {
+        size: 1,
+        color: '#ddd',
+        label: [],
+      },
+      name: '官方边',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'review_comment',
+        },
+      ],
+      order: 8,
+      logic: true,
+      groupName: 'REVIEW_COMMENT TYPE',
+    },
+    {
+      id: 'SimpleEdge',
+      props: {
+        size: 1,
+        color: '#ddd',
+        label: [],
+      },
+      name: '官方边',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'has_issue_change_request',
+        },
+      ],
+      order: 9,
+      logic: true,
+      groupName: 'HAS_ISSUE_CHANGE_REQUEST TYPE',
+    },
+    {
+      id: 'SimpleEdge',
+      props: {
+        size: 1,
+        color: '#ddd',
+        label: [],
+      },
+      name: '官方边',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'has_issue_change_request',
+        },
+      ],
+      order: 10,
+      logic: true,
+      groupName: 'HAS_ISSUE_CHANGE_REQUEST TYPE',
+    },
+    {
+      id: 'SimpleEdge',
+      props: {
+        size: 1,
+        color: '#ddd',
+        label: [],
+      },
+      name: '官方边',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'close',
+        },
+      ],
+      order: 11,
+      logic: true,
+      groupName: 'CLOSE TYPE',
+    },
+    {
+      id: 'SimpleEdge',
+      props: {
+        size: 1,
+        color: '#ddd',
+        label: [],
+      },
+      name: '官方边',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'close',
+        },
+      ],
+      order: 12,
+      logic: true,
+      groupName: 'CLOSE TYPE',
+    },
+    {
+      id: 'SimpleEdge',
+      props: {
+        size: 1,
+        color: '#ddd',
+        label: [],
+      },
+      name: '官方边',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'has_assignee',
+        },
+      ],
+      order: 13,
+      logic: true,
+      groupName: 'HAS_ASSIGNEE TYPE',
+    },
+    {
+      id: 'SimpleEdge',
+      props: {
+        size: 1,
+        color: '#ddd',
+        label: [],
+      },
+      name: '官方边',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'has_assignee',
+        },
+      ],
+      order: 14,
+      logic: true,
+      groupName: 'HAS_ASSIGNEE TYPE',
+    },
+    {
+      id: 'SimpleEdge',
+      props: {
+        size: 1,
+        color: '#ddd',
+        label: [],
+      },
+      name: '官方边',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'has_requested_reviewer',
+        },
+      ],
+      order: 15,
+      logic: true,
+      groupName: 'HAS_REQUESTED_REVIEWER TYPE',
+    },
+    {
+      id: 'SimpleEdge',
+      props: {
+        size: 1,
+        color: '#ddd',
+        label: [],
+      },
+      name: '官方边',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'open',
+        },
+      ],
+      order: 16,
+      logic: true,
+      groupName: 'OPEN TYPE',
+    },
+    {
+      id: 'SimpleEdge',
+      props: {
+        size: 1,
+        color: '#ddd',
+        label: [],
+      },
+      name: '官方边',
+      expressions: [
+        {
+          name: 'GI_TYPE',
+          operator: 'eql',
+          value: 'open',
+        },
+      ],
+      order: 17,
+      logic: true,
+      groupName: 'OPEN TYPE',
+    },
+  ],
   layout: {
-    id: 'Dagre',
+    id: 'Force2',
     props: {
-      type: 'dagre',
-      rankdir: 'TB',
-      align: null,
-      nodesep: 40,
-      ranksep: 80,
+      type: 'force2',
+      animate: true,
+      preset: {
+        type: 'concentric',
+        width: 800,
+        height: 800,
+        minNodeSpacing: 10,
+        nodeSize: 10,
+      },
+      clusterNodeStrength: 35,
+      minMovement: 2,
+      damping: 0.8,
+      maxSpeed: 1000,
+      distanceThresholdMode: 'max',
+      edgeStrength: 200,
+      nodeStrength: 1000,
+      defSpringLenCfg: {
+        minLimitDegree: 5,
+        maxLimitLength: 500,
+        defaultSpring: 100,
+      },
+      centripetalOptions: {
+        leaf: 2,
+        single: 2,
+        others: 1,
+      },
+      advanceWeight: false,
+      edgeWeightFieldScale: 1,
+      nodeWeightFromType: 'node',
+      nodeWeightFieldScale: 1,
+      directed: false,
+      directedFromType: 'node',
+      directedIsLog: true,
+      directedMultiple: '0.1',
     },
   },
   components: [
     {
       id: 'ZoomIn',
+      type: 'GIAC',
+      name: '放大',
       props: {
         GI_CONTAINER_INDEX: 2,
         GIAC: {
@@ -36,6 +653,8 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'ZoomOut',
+      type: 'GIAC',
+      name: '缩小',
       props: {
         GI_CONTAINER_INDEX: 2,
         GIAC: {
@@ -57,6 +676,8 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'FitView',
+      type: 'GIAC',
+      name: '自适应',
       props: {
         GI_CONTAINER_INDEX: 2,
         GIAC: {
@@ -78,6 +699,8 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'FitCenter',
+      type: 'GIAC',
+      name: '视图居中',
       props: {
         GI_CONTAINER_INDEX: 2,
         GIAC: {
@@ -99,6 +722,8 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'LassoSelect',
+      type: 'GIAC',
+      name: '自由圈选',
       props: {
         GI_CONTAINER_INDEX: 2,
         GIAC: {
@@ -120,6 +745,8 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'PropertiesPanel',
+      type: 'AUTO',
+      name: '属性面板',
       props: {
         serviceId: 'GI/PropertiesPanel',
         title: '属性面板',
@@ -128,11 +755,14 @@ export const GI_PROJECT_CONFIG = {
         height: 'calc(100% - 0px)',
         offset: [10, 10],
         animate: false,
+        enableInfoDetect: true,
         defaultiStatistic: false,
       },
     },
     {
       id: 'ActivateRelations',
+      type: 'AUTO',
+      name: '元素高亮',
       props: {
         enableNodeHover: true,
         enableEdgeHover: true,
@@ -140,15 +770,18 @@ export const GI_PROJECT_CONFIG = {
         trigger: 'click',
         upstreamDegree: 1,
         downstreamDegree: 1,
+        multiSelectEnabled: false,
+        modifierKey: 'alt',
       },
     },
     {
       id: 'CanvasSetting',
+      type: 'AUTO',
+      name: '画布设置',
       props: {
         styleCanvas: {
           backgroundColor: '#fff',
           backgroundImage: 'https://gw.alipayobjects.com/mdn/rms_0d75e8/afts/img/A*k9t4QamMuQ4AAAAAAAAAAAAAARQnAQ',
-          background: '#fff',
         },
         dragCanvas: {
           disabled: false,
@@ -165,6 +798,8 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'NodeLegend',
+      type: 'AUTO',
+      name: '节点图例',
       props: {
         sortKey: 'type',
         textColor: '#ddd',
@@ -174,6 +809,7 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'Placeholder',
+      type: 'AUTO',
       name: '画布占位符',
       props: {
         img: 'https://gw.alipayobjects.com/zos/bmw-prod/db278704-6158-432e-99d2-cc5db457585d.svg',
@@ -183,15 +819,13 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'FilterPanel',
+      type: 'GIAC_CONTENT',
       name: '筛选面板',
       props: {
-        filterKeys: ['edge-amount', 'node-icon'],
+        histogramColor: '#3056E3',
         isFilterIsolatedNodes: true,
         highlightMode: true,
-        filterLogic: 'and',
-        histogramOptions: {
-          isCustom: false,
-        },
+        filterKeys: [],
         GI_CONTAINER_INDEX: 2,
         GIAC_CONTENT: {
           visible: false,
@@ -215,11 +849,19 @@ export const GI_PROJECT_CONFIG = {
           containerHeight: 'calc(100% - 100px)',
           contaienrMask: false,
         },
-        histogramColor: '#3056E3',
+        enableInfoDetect: true,
+        filterLogic: 'and',
+        histogramOptions: {
+          isCustom: false,
+          min: null,
+          max: null,
+          binWidth: null,
+        },
       },
     },
     {
       id: 'LargeGraph',
+      type: 'GIAC',
       name: '3D大图',
       props: {
         visible: false,
@@ -249,6 +891,7 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'MapMode',
+      type: 'GIAC',
       name: '地图模式',
       props: {
         visible: false,
@@ -279,45 +922,17 @@ export const GI_PROJECT_CONFIG = {
       },
     },
     {
-      id: 'SnapshotGallery',
-      name: '快照画廊',
-      props: {
-        background: '#fff',
-        direction: 'horizontal',
-        placement: 'LT',
-        offset: [20, 20],
-        GI_CONTAINER_INDEX: 2,
-        GIAC: {
-          visible: false,
-          disabled: false,
-          isShowTitle: false,
-          title: '快照画廊',
-          isShowIcon: true,
-          icon: 'icon-camera',
-          isShowTooltip: true,
-          tooltip: '快照画廊(快捷键ctrl+x)',
-          tooltipColor: '#3056e3',
-          tooltipPlacement: 'right',
-          hasDivider: false,
-          height: '46px',
-          isVertical: true,
-        },
-      },
-    },
-    {
       id: 'ContextMenu',
+      type: 'GICC_MENU',
       name: '右键菜单',
       props: {
         GI_CONTAINER: ['NeighborsQuery', 'ToggleClusterWithMenu', 'PinNodeWithMenu'],
         nodeMenuComponents: ['NeighborsQuery', 'ToggleClusterWithMenu', 'PinNodeWithMenu'],
-        bindTypes: ['node'],
-        edgeMenuComponents: [],
-        canvasMenuComponents: [],
-        comboMenuComponents: [],
       },
     },
     {
       id: 'ToggleClusterWithMenu',
+      type: 'GIAC_MENU',
       name: '展开/收起',
       props: {
         isReLayout: false,
@@ -326,15 +941,18 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'NeighborsQuery',
+      type: 'GIAC_MENU',
       name: '邻居查询',
       props: {
-        serviceId: 'GI/NeighborsQuery',
+        serviceId: 'Neo4j/NeighborsQuery',
         degree: '1',
         isFocus: true,
+        limit: 100,
       },
     },
     {
       id: 'Copyright',
+      type: 'AUTO',
       name: '版权',
       props: {
         imageUrl: 'https://gw.alipayobjects.com/zos/bmw-prod/c2d4b2f5-2a34-4ae5-86c4-df97f7136105.svg',
@@ -346,11 +964,13 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'Loading',
+      type: 'AUTO',
       name: '加载动画',
       props: {},
     },
     {
       id: 'PinNodeWithMenu',
+      type: 'GIAC_MENU',
       name: '固定节点(MENU)',
       props: {
         color: '#fff',
@@ -359,6 +979,7 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'ForceSimulation',
+      type: 'GIAC',
       name: '力导布局控制器',
       props: {
         autoPin: true,
@@ -383,16 +1004,24 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'Initializer',
+      type: 'INITIALIZER',
       name: '初始化器',
       props: {
-        serviceId: 'GI/GI_SERVICE_INTIAL_GRAPH',
-        schemaServiceId: 'GI/GI_SERVICE_SCHEMA',
+        serviceId: 'Neo4j/GI_SERVICE_INTIAL_GRAPH',
+        schemaServiceId: 'Neo4j/GI_SERVICE_SCHEMA',
         GI_INITIALIZER: true,
         aggregate: false,
       },
     },
     {
+      id: 'PropertyGraphInitializer',
+      type: 'AUTO',
+      name: '属性图计算',
+      props: {},
+    },
+    {
       id: 'LayoutSwitch',
+      type: 'GIAC',
       name: '布局切换',
       props: {
         GI_CONTAINER_INDEX: 2,
@@ -414,100 +1043,79 @@ export const GI_PROJECT_CONFIG = {
       },
     },
     {
-      id: 'GrailLayout',
-      name: '圣杯布局',
+      id: 'Toolbar',
+      type: 'GICC',
+      name: '工具栏',
       props: {
-        GI_CONTAINER_LEFT: [],
-        leftDisplay: false,
-        leftVisible: true,
-        leftWidth: '400px',
-        GI_CONTAINER_RIGHT: ['FilterPanel', 'SankeyAnalysis'],
-        rightDisplay: true,
-        rightVisible: true,
-        rightWidth: '350px',
-        GI_CONTAINER_BOTTOM: ['ChartAnalysis'],
-        bottomDisplay: true,
-        bottomVisible: true,
-        bottomHeight: '300px',
-        GI_CONTAINER_TOP: [],
-        topDisplay: false,
-        topVisible: false,
-        topHeight: '200px',
+        GI_CONTAINER: [
+          'ZoomIn',
+          'ZoomOut',
+          'FitView',
+          'FitCenter',
+          'LargeGraph',
+          'MapMode',
+          'ForceSimulation',
+          'LayoutSwitch',
+          'Export',
+        ],
+        direction: 'vertical',
+        placement: 'LT',
+        offset: [24, 64],
       },
     },
     {
-      id: 'TableMode',
-      name: '表格模式',
+      id: 'Export',
+      type: 'GIAC',
+      name: '导出',
       props: {
-        enableCopy: true,
-        isSelectedActive: true,
         GI_CONTAINER_INDEX: 2,
-        GIAC_CONTENT: {
+        GIAC: {
           visible: false,
           disabled: false,
-          isShowTitle: true,
-          title: '表格模式',
+          isShowTitle: false,
+          title: '导出',
           isShowIcon: true,
-          icon: 'icon-table',
+          icon: 'icon-export',
           isShowTooltip: true,
-          tooltip: '将画布中的节点和边以表格形式展示',
+          tooltip: '导出CSV,PNG,JSON数据',
           tooltipColor: '#3056e3',
           tooltipPlacement: 'right',
           hasDivider: false,
-          height: '60px',
+          height: '46px',
           isVertical: true,
-          containerType: 'div',
-          containerAnimate: false,
-          containerPlacement: 'RT',
-          offset: [0, 0],
-          containerWidth: '400px',
-          containerHeight: 'calc(100% - 100px)',
-          contaienrMask: false,
         },
       },
     },
     {
-      id: 'InfoDetection',
-      name: '信息检测',
+      id: 'SegmentedLayout',
+      type: 'GICC_LAYOUT',
+      name: '分段布局',
       props: {
-        GI_CONTAINER_INDEX: 2,
-        GIAC_CONTENT: {
-          visible: false,
-          disabled: false,
-          isShowTitle: true,
-          title: '信息检测',
-          isShowIcon: true,
-          icon: 'icon-infomation',
-          isShowTooltip: true,
-          tooltip: '检测画布中孤立点、环等',
-          tooltipColor: '#3056e3',
-          tooltipPlacement: 'right',
-          hasDivider: false,
-          height: '60px',
-          isVertical: true,
-          containerType: 'div',
-          containerAnimate: false,
-          containerPlacement: 'RT',
-          offset: [0, 0],
-          containerWidth: '400px',
-          containerHeight: 'calc(100% - 100px)',
-          contaienrMask: false,
-        },
+        containers: [
+          {
+            id: 'GI_CONTAINER_SIDE',
+            GI_CONTAINER: ['CypherQuery', 'FilterPanel'],
+          },
+        ],
       },
     },
     {
-      id: 'SankeyAnalysis',
-      name: '桑基图分析',
+      id: 'CypherQuery',
+      type: 'GIAC_CONTENT',
+      name: 'Cypher 语句查询',
       props: {
-        weightField: 'amount',
+        serviceId: 'Neo4j/CypherQuery',
+        isShowPublishButton: false,
+        saveCypherTemplateServceId: 'Neo4j/PublishTemplate',
+        initialValue: 'MATCH n RETURN LIMIT 100',
         GI_CONTAINER_INDEX: 2,
         GIAC_CONTENT: {
           visible: false,
           disabled: false,
           isShowTitle: true,
-          title: '桑基图分析',
+          title: 'Cypher 语句查询',
           isShowIcon: true,
-          icon: 'icon-sankey',
+          icon: 'icon-query',
           isShowTooltip: true,
           tooltip: '',
           tooltipColor: '#3056e3',
@@ -519,52 +1127,757 @@ export const GI_PROJECT_CONFIG = {
           containerAnimate: false,
           containerPlacement: 'RT',
           offset: [0, 0],
-          containerWidth: '400px',
+          containerWidth: '350px',
           containerHeight: 'calc(100% - 100px)',
           contaienrMask: false,
         },
-      },
-    },
-    {
-      id: 'ChartAnalysis',
-      name: '图表分析',
-      props: {
-        title: '未命名图表',
-        chartType: 'columnChart',
-        height: 150,
-        dataType: 'edges',
-        xField_edges: 'time',
-        yField_edges: 'amount',
-        GI_CONTAINER_INDEX: 2,
-        GIAC_CONTENT: {
-          visible: false,
-          disabled: false,
-          isShowTitle: true,
-          title: '图表分析',
-          isShowIcon: true,
-          icon: 'icon-barchart',
-          isShowTooltip: true,
-          tooltip: '图中数据通过统计图表展示分析',
-          tooltipColor: '#3056e3',
-          tooltipPlacement: 'right',
-          hasDivider: false,
-          height: '60px',
-          isVertical: true,
-          containerType: 'div',
-          containerAnimate: false,
-          containerPlacement: 'RT',
-          offset: [0, 0],
-          containerWidth: '400px',
-          containerHeight: 'calc(100% - 100px)',
-          contaienrMask: false,
-        },
+        limit: 100,
       },
     },
   ],
+  pageLayout: {
+    id: 'SegmentedLayout',
+    type: 'GICC_LAYOUT',
+    name: '分段布局',
+    props: {
+      containers: [
+        {
+          id: 'GI_CONTAINER_SIDE',
+          GI_CONTAINER: ['CypherQuery', 'FilterPanel'],
+        },
+      ],
+    },
+  },
 };
 
 /** G6VP 站点选择服务引擎的上下文配置信息 **/
-export const SERVER_ENGINE_CONTEXT = {};
+export const SERVER_ENGINE_CONTEXT = {
+  GI_SITE_PROJECT_ID: 'a1790d0d-3ba0-4b21-af28-1e7c02b56b9b',
+  engineId: 'Neo4j',
+  httpServerURL: 'http://127.0.0.1:7001',
+  uri: 'neo4j+s://neo4j.x-lab.info:7687',
+  username: 'neo4j',
+  password: 'Xlab2023!',
+  HAS_CONNECT_SUCCESS: true,
+  schemaData: {
+    nodes: [
+      {
+        id: '-2355',
+        label: 'github_actor',
+        nodeType: 'github_actor',
+        nodeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          name: 'github_actor',
+          indexes: ['login'],
+          constraints: [
+            "Constraint( id=8, name='github_actor_unique', type='UNIQUENESS', schema=(:github_actor {id}), ownedIndex=7 )",
+          ],
+          GI_TYPE: 'string',
+        },
+      },
+      {
+        id: '-2360',
+        label: 'license',
+        nodeType: 'license',
+        nodeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          name: 'license',
+          indexes: [],
+          constraints: [
+            "Constraint( id=18, name='license_unique', type='UNIQUENESS', schema=(:license {spdx_id}), ownedIndex=17 )",
+          ],
+          GI_TYPE: 'string',
+        },
+      },
+      {
+        id: '-2357',
+        label: 'github_change_request',
+        nodeType: 'github_change_request',
+        nodeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          name: 'github_change_request',
+          indexes: [],
+          constraints: [
+            "Constraint( id=12, name='github_change_request_unique', type='UNIQUENESS', schema=(:github_change_request {id}), ownedIndex=11 )",
+          ],
+          GI_TYPE: 'string',
+        },
+      },
+      {
+        id: '-2359',
+        label: 'language',
+        nodeType: 'language',
+        nodeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          name: 'language',
+          indexes: [],
+          constraints: [
+            "Constraint( id=16, name='language_unique', type='UNIQUENESS', schema=(:language {name}), ownedIndex=15 )",
+          ],
+          GI_TYPE: 'string',
+        },
+      },
+      {
+        id: '-2356',
+        label: 'github_issue',
+        nodeType: 'github_issue',
+        nodeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          name: 'github_issue',
+          indexes: [],
+          constraints: [
+            "Constraint( id=10, name='github_issue_unique', type='UNIQUENESS', schema=(:github_issue {id}), ownedIndex=9 )",
+          ],
+          GI_TYPE: 'string',
+        },
+      },
+      {
+        id: '-2353',
+        label: 'github_repo',
+        nodeType: 'github_repo',
+        nodeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          name: 'github_repo',
+          indexes: ['name'],
+          constraints: [
+            "Constraint( id=4, name='github_repo_unique', type='UNIQUENESS', schema=(:github_repo {id}), ownedIndex=3 )",
+          ],
+          GI_TYPE: 'string',
+        },
+      },
+      {
+        id: '-2358',
+        label: 'issue_label',
+        nodeType: 'issue_label',
+        nodeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          name: 'issue_label',
+          indexes: [],
+          constraints: [
+            "Constraint( id=14, name='issue_label_unique', type='UNIQUENESS', schema=(:issue_label {name}), ownedIndex=13 )",
+          ],
+          GI_TYPE: 'string',
+        },
+      },
+      {
+        id: '-2354',
+        label: 'github_org',
+        nodeType: 'github_org',
+        nodeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          name: 'github_org',
+          indexes: ['login'],
+          constraints: [
+            "Constraint( id=6, name='github_org_unique', type='UNIQUENESS', schema=(:github_org {id}), ownedIndex=5 )",
+          ],
+          GI_TYPE: 'string',
+        },
+      },
+    ],
+    edges: [
+      {
+        id: '-5301',
+        source: '-2356',
+        target: '-2358',
+        label: 'has_issue_label',
+        edgeType: 'has_issue_label',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5302',
+        source: '-2357',
+        target: '-2358',
+        label: 'has_issue_label',
+        edgeType: 'has_issue_label',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5306',
+        source: '-2354',
+        target: '-2353',
+        label: 'has_repo',
+        edgeType: 'has_repo',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5305',
+        source: '-2353',
+        target: '-2359',
+        label: 'has_language',
+        edgeType: 'has_language',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5297',
+        source: '-2355',
+        target: '-2357',
+        label: 'review',
+        edgeType: 'review',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5310',
+        source: '-2353',
+        target: '-2360',
+        label: 'has_license',
+        edgeType: 'has_license',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5296',
+        source: '-2355',
+        target: '-2357',
+        label: 'comment',
+        edgeType: 'comment',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5295',
+        source: '-2355',
+        target: '-2356',
+        label: 'comment',
+        edgeType: 'comment',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5298',
+        source: '-2355',
+        target: '-2357',
+        label: 'review_comment',
+        edgeType: 'review_comment',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5307',
+        source: '-2353',
+        target: '-2356',
+        label: 'has_issue_change_request',
+        edgeType: 'has_issue_change_request',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5308',
+        source: '-2353',
+        target: '-2357',
+        label: 'has_issue_change_request',
+        edgeType: 'has_issue_change_request',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5299',
+        source: '-2355',
+        target: '-2356',
+        label: 'close',
+        edgeType: 'close',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5300',
+        source: '-2355',
+        target: '-2357',
+        label: 'close',
+        edgeType: 'close',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5303',
+        source: '-2356',
+        target: '-2355',
+        label: 'has_assignee',
+        edgeType: 'has_assignee',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5304',
+        source: '-2357',
+        target: '-2355',
+        label: 'has_assignee',
+        edgeType: 'has_assignee',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5309',
+        source: '-2357',
+        target: '-2355',
+        label: 'has_requested_reviewer',
+        edgeType: 'has_requested_reviewer',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5294',
+        source: '-2355',
+        target: '-2357',
+        label: 'open',
+        edgeType: 'open',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5293',
+        source: '-2355',
+        target: '-2356',
+        label: 'open',
+        edgeType: 'open',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+    ],
+    meta: {
+      defaultLabelField: 'name',
+    },
+  },
+  HTTP_SERVICE_URL: 'http://127.0.0.1:7001',
+  engineServerURL: 'neo4j+s://neo4j.x-lab.info:7687',
+  ENGINE_USER_TOKEN: 'Bearer 0.025428133602857006',
+  CURRENT_SUBGRAPH: 'opensource',
+};
 
-/** 导出的主题 **/
-export const THEME_VALUE = 'light';
+window['LOCAL_DATA_FOR_GI_ENGINE'] = {
+  data: {
+    nodes: [],
+    edges: [],
+  },
+  schemaData: {
+    nodes: [
+      {
+        id: '-2355',
+        label: 'github_actor',
+        nodeType: 'github_actor',
+        nodeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          name: 'github_actor',
+          indexes: ['login'],
+          constraints: [
+            "Constraint( id=8, name='github_actor_unique', type='UNIQUENESS', schema=(:github_actor {id}), ownedIndex=7 )",
+          ],
+          GI_TYPE: 'string',
+        },
+      },
+      {
+        id: '-2360',
+        label: 'license',
+        nodeType: 'license',
+        nodeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          name: 'license',
+          indexes: [],
+          constraints: [
+            "Constraint( id=18, name='license_unique', type='UNIQUENESS', schema=(:license {spdx_id}), ownedIndex=17 )",
+          ],
+          GI_TYPE: 'string',
+        },
+      },
+      {
+        id: '-2357',
+        label: 'github_change_request',
+        nodeType: 'github_change_request',
+        nodeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          name: 'github_change_request',
+          indexes: [],
+          constraints: [
+            "Constraint( id=12, name='github_change_request_unique', type='UNIQUENESS', schema=(:github_change_request {id}), ownedIndex=11 )",
+          ],
+          GI_TYPE: 'string',
+        },
+      },
+      {
+        id: '-2359',
+        label: 'language',
+        nodeType: 'language',
+        nodeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          name: 'language',
+          indexes: [],
+          constraints: [
+            "Constraint( id=16, name='language_unique', type='UNIQUENESS', schema=(:language {name}), ownedIndex=15 )",
+          ],
+          GI_TYPE: 'string',
+        },
+      },
+      {
+        id: '-2356',
+        label: 'github_issue',
+        nodeType: 'github_issue',
+        nodeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          name: 'github_issue',
+          indexes: [],
+          constraints: [
+            "Constraint( id=10, name='github_issue_unique', type='UNIQUENESS', schema=(:github_issue {id}), ownedIndex=9 )",
+          ],
+          GI_TYPE: 'string',
+        },
+      },
+      {
+        id: '-2353',
+        label: 'github_repo',
+        nodeType: 'github_repo',
+        nodeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          name: 'github_repo',
+          indexes: ['name'],
+          constraints: [
+            "Constraint( id=4, name='github_repo_unique', type='UNIQUENESS', schema=(:github_repo {id}), ownedIndex=3 )",
+          ],
+          GI_TYPE: 'string',
+        },
+      },
+      {
+        id: '-2358',
+        label: 'issue_label',
+        nodeType: 'issue_label',
+        nodeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          name: 'issue_label',
+          indexes: [],
+          constraints: [
+            "Constraint( id=14, name='issue_label_unique', type='UNIQUENESS', schema=(:issue_label {name}), ownedIndex=13 )",
+          ],
+          GI_TYPE: 'string',
+        },
+      },
+      {
+        id: '-2354',
+        label: 'github_org',
+        nodeType: 'github_org',
+        nodeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          name: 'github_org',
+          indexes: ['login'],
+          constraints: [
+            "Constraint( id=6, name='github_org_unique', type='UNIQUENESS', schema=(:github_org {id}), ownedIndex=5 )",
+          ],
+          GI_TYPE: 'string',
+        },
+      },
+    ],
+    edges: [
+      {
+        id: '-5301',
+        source: '-2356',
+        target: '-2358',
+        label: 'has_issue_label',
+        edgeType: 'has_issue_label',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5302',
+        source: '-2357',
+        target: '-2358',
+        label: 'has_issue_label',
+        edgeType: 'has_issue_label',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5306',
+        source: '-2354',
+        target: '-2353',
+        label: 'has_repo',
+        edgeType: 'has_repo',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5305',
+        source: '-2353',
+        target: '-2359',
+        label: 'has_language',
+        edgeType: 'has_language',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5297',
+        source: '-2355',
+        target: '-2357',
+        label: 'review',
+        edgeType: 'review',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5310',
+        source: '-2353',
+        target: '-2360',
+        label: 'has_license',
+        edgeType: 'has_license',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5296',
+        source: '-2355',
+        target: '-2357',
+        label: 'comment',
+        edgeType: 'comment',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5295',
+        source: '-2355',
+        target: '-2356',
+        label: 'comment',
+        edgeType: 'comment',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5298',
+        source: '-2355',
+        target: '-2357',
+        label: 'review_comment',
+        edgeType: 'review_comment',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5307',
+        source: '-2353',
+        target: '-2356',
+        label: 'has_issue_change_request',
+        edgeType: 'has_issue_change_request',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5308',
+        source: '-2353',
+        target: '-2357',
+        label: 'has_issue_change_request',
+        edgeType: 'has_issue_change_request',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5299',
+        source: '-2355',
+        target: '-2356',
+        label: 'close',
+        edgeType: 'close',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5300',
+        source: '-2355',
+        target: '-2357',
+        label: 'close',
+        edgeType: 'close',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5303',
+        source: '-2356',
+        target: '-2355',
+        label: 'has_assignee',
+        edgeType: 'has_assignee',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5304',
+        source: '-2357',
+        target: '-2355',
+        label: 'has_assignee',
+        edgeType: 'has_assignee',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5309',
+        source: '-2357',
+        target: '-2355',
+        label: 'has_requested_reviewer',
+        edgeType: 'has_requested_reviewer',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5294',
+        source: '-2355',
+        target: '-2357',
+        label: 'open',
+        edgeType: 'open',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+      {
+        id: '-5293',
+        source: '-2355',
+        target: '-2356',
+        label: 'open',
+        edgeType: 'open',
+        edgeTypeKeyFromProperties: 'GI_TYPE',
+        properties: {
+          GI_TYPE: 'string',
+          source: 'string',
+          target: 'string',
+        },
+      },
+    ],
+    meta: {
+      defaultLabelField: 'name',
+    },
+  },
+};

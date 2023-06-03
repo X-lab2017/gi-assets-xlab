@@ -1,77 +1,54 @@
-import * as GI_ASSETS_BASIC from '@antv/gi-assets-basic';
-import { services as GI_ASSETS_BASIC_SERVER } from '@antv/gi-assets-basic';
-import GISDK, { utils } from '@antv/gi-sdk';
-import ThemeSwitch from '@antv/gi-theme-antd';
 import React from 'react';
-import { GI_PROJECT_CONFIG, SERVER_ENGINE_CONTEXT, THEME_VALUE } from './GI_EXPORT_FILES';
-import ServerView from './ServerView';
-import update from './update';
+import ThemeSwitch from '@antv/gi-theme-antd'
+import {  GI_PROJECT_CONFIG, SERVER_ENGINE_CONTEXT,GI_ASSETS_PACKAGE } from "./GI_EXPORT_FILES";
 
-/** 资产可按需引入 **/
-const {
-  ZoomIn,
-  ZoomOut,
-  FitView,
-  FitCenter,
-  PropertiesPanel,
-  ActivateRelations,
-  CanvasSetting,
-  FilterPanel,
-  ContextMenu,
-  ToggleClusterWithMenu,
-  Copyright,
-  PinNodeWithMenu,
-  Initializer,
-  LayoutSwitch,
-  SideTabs,
-  Toolbar,
-  Placeholder,
-} = GI_ASSETS_BASIC.components;
-const { SimpleNode, SimpleEdge } = GI_ASSETS_BASIC.elements;
-const { GraphinForce, Concentric, Dagre, FundForce } = GI_ASSETS_BASIC.layouts;
+    
 
-const ASSETS = {
-  components: {
-    ZoomIn,
-    ZoomOut,
-    FitView,
-    FitCenter,
-    PropertiesPanel,
-    ActivateRelations,
-    CanvasSetting,
-    FilterPanel,
-    ContextMenu,
-    ToggleClusterWithMenu,
-    Copyright,
-    PinNodeWithMenu,
-    Initializer,
-    LayoutSwitch,
-    SideTabs,
-    Toolbar,
-    Placeholder,
-  },
-  elements: { SimpleNode, SimpleEdge },
-  layouts: { GraphinForce, Concentric, Dagre, FundForce },
-};
 //@ts-ignore
-const { config, assets, engine } = update(ASSETS, GI_PROJECT_CONFIG, [GI_ASSETS_BASIC_SERVER]);
-const { getCombineServices } = utils;
-//@ts-ignores
-const services = getCombineServices(engine);
-/** 设置服务引擎 Context **/
-utils.setServerEngineContext(SERVER_ENGINE_CONTEXT);
-/** 设置主题 **/
-window.localStorage.setItem('@theme', THEME_VALUE);
+const {  getCombineServices,loaderCombinedAssets } = window.GISDK.utils;
+const { GI_SITE_PROJECT_ID } = SERVER_ENGINE_CONTEXT;
+// 设置引擎上下文
+window.localStorage.setItem( 'SERVER_ENGINE_CONTEXT', JSON.stringify(SERVER_ENGINE_CONTEXT));
 
-const MyGraphApp = () => {
+const MyGraphApp= (props) => {
+  const [state,setState]= React.useState({
+    isReady:false,
+    assets:null,
+    config:{},
+    services:[]
+  });
+  React.useEffect(()=>{
+    loaderCombinedAssets(GI_ASSETS_PACKAGE).then(res=>{
+      /** 生成服务 */
+      const services = getCombineServices(res.services)
+      setState(preState=>{
+        return {
+          ...preState,
+          isReady:true,
+          assets:res,
+          services,
+          config:GI_PROJECT_CONFIG,
+        }
+      })
+    })
+  },[]);
+  const {assets,isReady,config,services} =state;
+  if(!isReady){
+    return <div>loading...</div>
+  }
   return (
-    <div style={{ height: '100vh' }}>
-      <ThemeSwitch style={{ visibility: 'hidden' }} />
-      <ServerView />
-      {/** @ts-ignore */}
-      <GISDK config={config} assets={assets} services={services} />
+    <div>
+      <div style={{ height: "100vh" }}>
+        <ThemeSwitch style={{display: 'none'}} />
+        {/** @ts-ignore */}
+        <window.GISDK.default
+          config={config}
+          assets={assets}
+          services={services}
+        />
+      </div>
     </div>
   );
 };
 
-export default MyGraphApp;
+ export default MyGraphApp;
