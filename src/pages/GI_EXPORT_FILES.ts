@@ -118,19 +118,7 @@ export const GI_PROJECT_CONFIG = {
         },
       },
     },
-    {
-      id: 'PropertiesPanel',
-      props: {
-        serviceId: 'GI/PropertiesPanel',
-        title: '属性面板',
-        placement: 'RT',
-        width: '356px',
-        height: 'calc(100% - 0px)',
-        offset: [10, 10],
-        animate: false,
-        defaultiStatistic: false,
-      },
-    },
+
     {
       id: 'ActivateRelations',
       props: {

@@ -1,0 +1,56 @@
+import { Empty } from 'antd';
+import React from 'react';
+
+const useComponents = (context, containers) => {
+  const { assets, config } = context;
+
+  const ComponentCfgMap = config.components.reduce((acc, curr) => {
+    return {
+      ...acc,
+      [curr.id]: curr,
+    };
+  }, {});
+  const getComponentById = componentId => {
+    debugger;
+    const asset = assets.components[componentId];
+    if (!asset) {
+      console.warn(`asset: ${componentId} not found`);
+      return null;
+    }
+    const { component: Component } = asset;
+    const { props: componentProps } = ComponentCfgMap[componentId];
+    const { icon } = componentProps.GIAC_CONTENT || {};
+    return {
+      id: componentId,
+      icon,
+      props: componentProps,
+      component: <Component {...componentProps} />,
+    };
+  };
+
+  return React.useMemo(() => {
+    const Containers = containers.map(container => {
+      let children;
+      if (container.GI_CONTAINER.length === 0) {
+        children = [
+          {
+            id: 'empty',
+            icon: 'icon-empty',
+            props: {},
+            component: <Empty description="当前容器中无可用资产，请在配置面板中集成" />,
+          },
+        ];
+      } else {
+        children = container.GI_CONTAINER.map(getComponentById).filter(c => c);
+      }
+      return {
+        ...container,
+        children,
+      };
+    });
+
+    return Containers;
+  }, [ComponentCfgMap, assets]);
+};
+
+export default useComponents;
