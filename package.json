@@ -7,20 +7,25 @@
     "gi-asstes"
   ],
   "license": "MIT",
-  "types": "dist/types.d.ts",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "lib/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "es",
+    "lib"
   ],
   "scripts": {
     "build": "father build && npm run build:umd",
     "build:umd": "webpack  --mode production  -c ./webpack.config.js",
     "serve": "http-server dist -p 9527",
-    "start": "umi dev"
+    "start": "umi dev",
+    "build:es": "father build"
   },
   "dependencies": {
     "@antv/g6": "4.x",
     "@antv/gi-assets-basic": "latest",
-    "@antv/gi-sdk": "latest",
+    "@antv/gi-sdk": "^2.3.5",
     "@antv/gi-theme-antd": "latest",
     "@antv/graphin": "^2.7.14",
     "antd": "4.x",
