@@ -1,36 +1,31 @@
+import { useContext } from '@antv/gi-sdk';
 import React from 'react';
-const Counter = props => {
+import './index.less';
+import useComponents from './useComponents';
+const XlabLayout = props => {
   const { containers, children } = props;
+  const context = useContext();
+  const { config, assets, HAS_GRAPH } = context;
 
-  console.log('containers', containers);
+  const Containers = useComponents(context, containers);
+  console.log('containers', containers, Containers, HAS_GRAPH);
+  const [header, panel] = Containers;
 
   return (
-    <div
-      style={{
-        background: 'red',
-        padding: '20px',
-        height: 'calc(100vh)',
-      }}
-    >
-      <div
-        style={{ background: 'green', width: '400px', height: '300px', display: 'inline-block', verticalAlign: 'top' }}
-      >
-         自定义布局 left
+    <div className="gi-xlab">
+      <div className="xlab-header">
+        {header.children.map(item => {
+          return item.component;
+        })}
       </div>
-      <div
-        style={{
-          background: 'blue',
-          width: 'calc(100% - 400px)',
-          height: '300px',
-          display: 'inline-block',
-          verticalAlign: 'top',
-        }}
-      >
-         自定义布局 right
+      <div className="xlab-canvas">{children}</div>
+      <div className="xlab-properties">
+        {panel.children.map(item => {
+          return item.component;
+        })}
       </div>
-      <div style={{ height: '500px' }}>{children}</div>
     </div>
   );
 };
 
-export default Counter;
+export default XlabLayout;
