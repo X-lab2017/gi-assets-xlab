@@ -1,90 +1,140 @@
-## G6VP 资产包的模版
+## 01 `api/query/schema`
 
-## 安装
+`POST` 查询子图的 Schema 接口
 
-```bash
-npm i
-
-```
-
-## 本地启动 DEMO
-
-本地通过 umi 启动一个 从 GI 站点中导出的 demo
-
-```bash
-npm run start
-```
-
-## 自定义分析资产
-
-我们以自定义一个统计器为例： `src/components/Counter`，没有什么高科技，就是普通的 React 组件，只是会比普通的组件包，导出结构多几个字段参数，用于在 G6VP 站点上协同。
-
-```jsx
-import Component from './Component'; // 组件实现
-import info from './info'; //组件的元信息
-import registerMeta from './registerMeta'; //组件 props 的 Schema 表达，采用 formily 方案
-export default { info, component: Component, registerMeta };
-```
-
-和画布相关的上下文，统一使用 React Context 机制
-
-```jsx
-import { useContext } from '@antv/gi-sdk';
-const Counter = props => {
-  const { graph, data, updateContext } = useContext(); //updateContext 用于更新 Context
-  return <></>;
+```js
+const request = {
+  subGraphName: 'xlab', // 需要查询的子图
 };
-export default Counter;
-```
 
-## 自定义服务资产
-
-参考代码： `src/components/services`，导出的格式为:
-
-```jsx
-export default {
-  id: 'MyServer',
-  type: 'api',
-  name: '我的服务',
-  desc: 'MyServer',
-  cover: 'https://gw.alipayobjects.com/mdn/rms_0d75e8/afts/img/A*3YEZS6qSRgAAAAAAAAAAAAAAARQnAQ',
-  component: Server,
-  services: {
-    ...Initializer,
+const response = {
+  success: true,
+  data: {
+    nodes: [
+      {
+        /** 节点类型 */
+        nodeType: 'repo',
+        /** 节点类型，通过业务数据（data）中的哪个字段映射的 */
+        nodeTypeKeyFromProperties: 'label',
+        /** 业务数据（data）中的字段类型，目前不支持嵌套 */
+        properties: {
+          star: 'number',
+          createTime: 'date',
+        },
+      },
+      {
+        nodeType: 'user',
+        nodeTypeKeyFromProperties: 'label',
+        properties: {
+          city: 'string',
+          age: 'string',
+        },
+      },
+    ],
+    edges: [
+      {
+        /** 边类型 */
+        edgeType: 'star',
+        /** 边类型，通过业务数据（data）中的哪个字段映射的 */
+        edgeTypeKeyFromProperties: 'label',
+        /** 边上开端节点类型   */
+        sourceNodeType: 'user',
+        /** 边上目标节点类型 */
+        targetNodeType: 'repo',
+        /** 业务数据（data）中的字段类型，目前不支持嵌套 */
+        properties: {
+          time: 'date',
+        },
+      },
+    ],
+    metas: {
+      /** 默认的标签映射字段 */
+      defaultLabelField: 'name',
+    },
   },
 };
 ```
 
-其中 `component` 字段用于 展示在 GI 的站点上，用于设置启动，停止服务，以及设置服务所需要的上下文参数。 `services`字段用于复写已有的 GI 资产服务。其中每个 Service ID 由对应的资产的 `info.services` 决定
+## 02 `api/query/fuzzy`
 
-**_在 GI 的设计中，资产是第一等公民_**，即一个资产可以定义自己该如何触发（Interaction + Action），触发后如何响应数据 （ Data ），以及拿到数据后改如何展示（View）,目前 GI 共有 61 个资产，其中仅有 6 个资产有数据服务，包含 10 个 `**ServiceId **`如下表所示:
+`POST` 模糊查询接口，用于用户输入的数据填充
 
-| 资产 ID         | 资产名称     | **ServiceId**                                 | 服务名称                  |
-| --------------- | ------------ | --------------------------------------------- | ------------------------- |
-| Initializer     | 初始化器     | GI_SERVICE_INTIAL_GRAPH<br/>GI_SERVICE_SCHEMA | 初始化查询<br/>查询图模型 |
-| GremlinQuery    | Gremlin 查询 | GremlinQuery                                  | 查询 Gremlin 接口         |
-| NeighborsQuery  | 邻居查询     | NeighborsQuery                                | 邻居查询                  |
-| PropertiesPanel | 属性面板     | PropertiesPanel                               | 查询属性详情              |
-| Save            | 保存分享     | Save                                          | 保存图画布的接口          |
+```js
+const request = {
+  value: 'antvis', // 迷糊查询的值，比如 antvis
+};
 
-## 本地打包
-
-```bash
-npm run build
+const response = {
+  success: true,
+  data: [
+    {
+      name: 'antvis/G6',
+      id: 'antvis/G6',
+      label: 'repo',
+    },
+    {
+      name: 'antvis/G6VP',
+      id: 'antvis/G6VP',
+      label: 'repo',
+    },
+  ];
+}
 ```
 
-产物的 UMD 包名通过 webpack 改写了，改写逻辑：
+## 03 `api/query/graph`
 
-```jsx
-const ASSETS_UMD = name.split('-').join('_').toUpperCase();
+`POST` 查询节点
+
+```js
+const request = {
+  label: 'repo', //查询的类型
+  value: 'antvis/G6VP', // 具体的值，比如 antvis/G6VP
+  mode: 'element',
+};
+
+const response = {
+  success: true,
+  data: {
+    nodes: [
+      {
+        id: 'antvis/G6VP',
+        label: 'repo',
+        properties: {
+          city: 'hangzhou',
+          star: 408,
+          group: 'antvis',
+        },
+      },
+    ],
+    edges: [],
+  },
+};
 ```
 
-本地启动 HTTPServer，比如 VsCode 的 [LiveServer](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) 插件。然后上传到 [G6VP 资产中心 ](https://graphinsight.antgroup.com/#/assets)
+## 04 `api/query/neighbors`
 
-于是我们便可以在 G6VP 中享用自定义的资产和服务啦
+`POST` 查询邻居
 
-![消费自定义服务](https://mdn.alipayobjects.com/huamei_qa8qxu/afts/img/A*ZmYESK-f3RAAAAAAAAAAAAAADmJ7AQ/original)
-![消费自定义资产](https://mdn.alipayobjects.com/huamei_qa8qxu/afts/img/A*6H8qQqKdDL0AAAAAAAAAAAAADmJ7AQ/original)
+```js
+const request = {
+  ids: ['antvis/G6VP', 'antvis/G6'],
+  spe: 1,
+  filter: [
+    {
+      key: 'star',
+      operator: 'gt',
+      value: 100,
+    },
+  ],
+};
 
-资产包验证没问题，可以发布 npm 包，或者发布到 CDN 上
-国内可用：https://www.jsdelivr.com/ ，国外可用：https://unpkg.com/
+const response = {
+  success: true,
+  data: [
+    {
+      id: 'query.oneDagre',
+      name: '查询关联的节点',
+    },
+  ],
+};
+```
