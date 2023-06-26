@@ -136,11 +136,19 @@ const request = {
       key: 'star',
       operator: 'gt',
       value: 100,
+      type: 'node', // 表示在「节点」上的属性
     },
     {
       key: 'label',
       operator: 'in',
       value: ['repo', 'user'],
+      type: 'node', // 表示在「节点」上的属性
+    },
+    {
+      key: 'label',
+      operator: 'in',
+      value: ['contribute', 'dependent'], // 贡献或依赖的边类型
+      type: 'edge', // 表示在「边」上的属性
     },
   ],
 };
@@ -277,6 +285,44 @@ const response = {
         value: 200,
       },
     ]
+  }],
+};
+```
+
+## 07 `api/query/trending`
+
+`POST` 获取指定类型的 trending 榜单，类似 https://github.com/trending
+
+```js
+const request = {
+  label: 'repo', // trending 榜单的类型，repo 或个人 (developer),
+  timeRange: [1687762131571, 1687768056732], // 时间戳范围
+  
+};
+
+const response = {
+  success: true,
+  data: [
+    {
+      id: 'zz924308',
+      name: 'antvis/Graphin',
+      label: 'repo',
+      properties: {
+        city: 'hangzhou',
+        star: 333,
+        group: 'antvis',
+      },
+    },
+    {
+      id: 'yy123841',
+      name: 'antvis/G6',
+      label: 'repo',
+      properties: {
+        city: 'hangzhou',
+        star: 10000,
+        group: 'antvis',
+      },
+    },
   }],
 };
 ```
