@@ -297,12 +297,16 @@ const response = {
 const request = {
   label: 'repo', // trending 榜单的类型，repo 或个人 (developer),
   timeRange: [1687762131571, 1687768056732], // 时间戳范围
-  
+  filter: [{ // 属性的条件
+    key: 'language',
+    operator: 'eq',
+    value: 'javascript' // repo 的语言是 javascript
+  }]
 };
 
 const response = {
   success: true,
-  data: [
+  data: [ // 按照 trending 顺序排序
     {
       id: 'zz924308',
       name: 'antvis/Graphin',
