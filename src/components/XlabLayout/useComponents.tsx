@@ -11,7 +11,6 @@ const useComponents = (context, containers) => {
     };
   }, {});
   const getComponentById = componentId => {
-    debugger;
     const asset = assets.components[componentId];
     if (!asset) {
       console.warn(`asset: ${componentId} not found`);
