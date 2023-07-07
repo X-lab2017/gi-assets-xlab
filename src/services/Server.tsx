@@ -9,7 +9,8 @@ export interface ServerProps {
 }
 
 const DEFAULT_INFO = {
-  initialQuery: 'https://cdn.jsdelivr.net/npm/@antv/gi-mock-data/cdn/bank.json',
+  initialQuery:
+    'https://xlab-open-source.oss-cn-beijing.aliyuncs.com/zhicheng-ning/sample-data/mock-graph-data-for-gi-assets-xlab.json',
   schemaQuery: '',
   propertiesQuery: '',
   neighborQuery: '',
