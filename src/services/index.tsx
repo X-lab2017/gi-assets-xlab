@@ -1,9 +1,9 @@
+import $i18n from '../i18n';
 import * as ElementProperties from './ElementProperties';
 import * as Search from './Search';
 import Server from './Server';
-import $i18n from '../i18n';
 export default {
-  id: 'XlabServer',
+  id: 'GI',
   type: 'api',
   name: $i18n.get({ id: 'gi-assets-xlab.src.services.XlabService', dm: 'Xlab 服务' }),
   desc: 'Services of xlab x TuGraph',
