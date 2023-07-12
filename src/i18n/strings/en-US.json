@@ -86,5 +86,9 @@
   "gi-assets-xlab.src.services.Server.NeighborQuery": "Neighbor query",
   "gi-assets-xlab.src.services.Server.CanBeEmptyByDefault": "Can be empty. By default, MOCK neighbors query data.",
   "gi-assets-xlab.src.services.Server.StartAnalysis": "Start analysis",
-  "gi-assets-xlab.src.services.XlabService": "Xlab service"
+  "gi-assets-xlab.src.services.XlabService": "Xlab service",
+  "gi-assets-xlab.components.XlabPropertiesPanel.Component.NodeType": "Node type",
+  "gi-assets-xlab.components.XlabPropertiesPanel.Component.EdgeType": "Edge type",
+  "gi-assets-xlab.components.XlabPropertiesPanel.Component.CanvasOverview": "Canvas overview",
+  "gi-assets-xlab.components.XlabPropertiesPanel.Component.PleaseRequestDataFirstAnd": "Please request data first, and then select the Repo and User nodes by single choice or hold down the shift box to view the details."
 }

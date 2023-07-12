@@ -86,5 +86,9 @@
   "gi-assets-xlab.src.services.Server.NeighborQuery": "邻居查询",
   "gi-assets-xlab.src.services.Server.CanBeEmptyByDefault": "可以为空，默认 MOCK 邻居查询数据",
   "gi-assets-xlab.src.services.Server.StartAnalysis": "开始分析",
-  "gi-assets-xlab.src.services.XlabService": "Xlab 服务"
+  "gi-assets-xlab.src.services.XlabService": "Xlab 服务",
+  "gi-assets-xlab.components.XlabPropertiesPanel.Component.NodeType": "节点类型",
+  "gi-assets-xlab.components.XlabPropertiesPanel.Component.EdgeType": "边类型",
+  "gi-assets-xlab.components.XlabPropertiesPanel.Component.CanvasOverview": "画布概览",
+  "gi-assets-xlab.components.XlabPropertiesPanel.Component.PleaseRequestDataFirstAnd": "请先请求数据，然后单选或按住 shift 框选 Repo、User 节点可查看详情"
 }

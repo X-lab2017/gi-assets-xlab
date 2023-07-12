@@ -84,7 +84,7 @@ const XlabSearch = props => {
         <Select
           className="gi-xlabsearch-type-select"
           defaultValue="repo"
-          style={{ width: '80px' }}
+          style={{ width: '80px', color: 'var(--text-color-2)' }}
           size={size}
           onChange={setType}
         >
