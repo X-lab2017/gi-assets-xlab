@@ -1,8 +1,9 @@
 import { GIGraphData, utils } from '@antv/gi-sdk';
+import $i18n from '../i18n';
 const { getServerEngineContext, generatorSchemaByGraphData } = utils;
 
-export const GI_SERVICE_INTIAL_GRAPH = {
-  name: '初始化查询',
+const GI_SERVICE_INTIAL_GRAPH = {
+  name: $i18n.get({ id: 'gi-assets-xlab.src.services.Initializer.InitializeAQuery', dm: '初始化查询' }),
   method: 'GET',
   req: ``,
   res: ``,
@@ -29,8 +30,8 @@ export const GI_SERVICE_INTIAL_GRAPH = {
   },
 };
 
-export const GI_SERVICE_SCHEMA = {
-  name: '查询图模型',
+const GI_SERVICE_SCHEMA = {
+  name: $i18n.get({ id: 'gi-assets-xlab.src.services.Initializer.QueryGraphModel', dm: '查询图模型' }),
   method: 'GET',
   req: ``,
   res: `
@@ -65,3 +66,5 @@ export const GI_SERVICE_SCHEMA = {
       });
   },
 };
+
+export { GI_SERVICE_INTIAL_GRAPH, GI_SERVICE_SCHEMA };

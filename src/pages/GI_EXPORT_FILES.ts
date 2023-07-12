@@ -1,5 +1,5 @@
-/** G6VP 站点自动生成的配置 **/
-export const GI_PROJECT_CONFIG = {
+import $i18n from '../i18n'; /** G6VP 站点自动生成的配置 **/
+const GI_PROJECT_CONFIG = {
   nodes: [],
   edges: [],
   layout: {
@@ -21,7 +21,7 @@ export const GI_PROJECT_CONFIG = {
           visible: false,
           disabled: false,
           isShowTitle: false,
-          title: '放大',
+          title: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.ZoomIn', dm: '放大' }),
           isShowIcon: true,
           icon: 'icon-zoomin',
           isShowTooltip: true,
@@ -42,7 +42,7 @@ export const GI_PROJECT_CONFIG = {
           visible: false,
           disabled: false,
           isShowTitle: false,
-          title: '缩小',
+          title: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.ZoomOut', dm: '缩小' }),
           isShowIcon: true,
           icon: 'icon-zoomout',
           isShowTooltip: true,
@@ -63,7 +63,7 @@ export const GI_PROJECT_CONFIG = {
           visible: false,
           disabled: false,
           isShowTitle: false,
-          title: '自适应',
+          title: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.Adaptive', dm: '自适应' }),
           isShowIcon: true,
           icon: 'icon-fit-view',
           isShowTooltip: true,
@@ -84,7 +84,7 @@ export const GI_PROJECT_CONFIG = {
           visible: false,
           disabled: false,
           isShowTitle: false,
-          title: '视图居中',
+          title: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.ViewCenter', dm: '视图居中' }),
           isShowIcon: true,
           icon: 'icon-fit-center',
           isShowTooltip: true,
@@ -105,11 +105,14 @@ export const GI_PROJECT_CONFIG = {
           visible: false,
           disabled: false,
           isShowTitle: false,
-          title: '自由圈选',
+          title: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.FreeSelection', dm: '自由圈选' }),
           isShowIcon: true,
           icon: 'icon-lasso',
           isShowTooltip: true,
-          tooltip: '按住Shift，点击画布即可自由圈选',
+          tooltip: $i18n.get({
+            id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.HoldDownShiftAndClick',
+            dm: '按住Shift，点击画布即可自由圈选',
+          }),
           tooltipColor: '#3056e3',
           tooltipPlacement: 'right',
           hasDivider: false,
@@ -162,16 +165,19 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'Placeholder',
-      name: '画布占位符',
+      name: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.CanvasPlaceholder', dm: '画布占位符' }),
       props: {
         img: 'https://gw.alipayobjects.com/zos/bmw-prod/db278704-6158-432e-99d2-cc5db457585d.svg',
-        text: '当前画布为空，请先试试「数据/图数据源/导入/示例数据」',
+        text: $i18n.get({
+          id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.TheCurrentCanvasIsEmpty',
+          dm: '当前画布为空，请先试试「数据/图数据源/导入/示例数据」',
+        }),
         width: 380,
       },
     },
     {
       id: 'FilterPanel',
-      name: '筛选面板',
+      name: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.FilterPanel', dm: '筛选面板' }),
       props: {
         filterKeys: ['edge-amount', 'node-icon'],
         isFilterIsolatedNodes: true,
@@ -185,11 +191,14 @@ export const GI_PROJECT_CONFIG = {
           visible: false,
           disabled: false,
           isShowTitle: true,
-          title: '筛选面板',
+          title: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.FilterPanel', dm: '筛选面板' }),
           isShowIcon: true,
           icon: 'icon-filter',
           isShowTooltip: true,
-          tooltip: '通过属性筛选画布信息，可自定义',
+          tooltip: $i18n.get({
+            id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.FilterCanvasInformationThroughAttributes',
+            dm: '通过属性筛选画布信息，可自定义',
+          }),
           tooltipColor: '#3056e3',
           tooltipPlacement: 'top',
           hasDivider: false,
@@ -208,7 +217,7 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'LargeGraph',
-      name: '3D大图',
+      name: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.DBigPicture', dm: '3D大图' }),
       props: {
         visible: false,
         minSize: '50%',
@@ -220,7 +229,7 @@ export const GI_PROJECT_CONFIG = {
           visible: false,
           disabled: false,
           isShowTitle: false,
-          title: '3D大图',
+          title: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.DBigPicture', dm: '3D大图' }),
           isShowIcon: true,
           icon: 'icon-3d',
           isShowTooltip: true,
@@ -237,7 +246,7 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'MapMode',
-      name: '地图模式',
+      name: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.MapMode', dm: '地图模式' }),
       props: {
         visible: false,
         type: 'amap',
@@ -253,7 +262,7 @@ export const GI_PROJECT_CONFIG = {
           visible: false,
           disabled: false,
           isShowTitle: false,
-          title: '地图模式',
+          title: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.MapMode', dm: '地图模式' }),
           isShowIcon: true,
           icon: 'icon-global',
           isShowTooltip: true,
@@ -268,7 +277,7 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'SnapshotGallery',
-      name: '快照画廊',
+      name: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.SnapshotGallery', dm: '快照画廊' }),
       props: {
         background: '#fff',
         direction: 'horizontal',
@@ -279,11 +288,14 @@ export const GI_PROJECT_CONFIG = {
           visible: false,
           disabled: false,
           isShowTitle: false,
-          title: '快照画廊',
+          title: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.SnapshotGallery', dm: '快照画廊' }),
           isShowIcon: true,
           icon: 'icon-camera',
           isShowTooltip: true,
-          tooltip: '快照画廊(快捷键ctrl+x)',
+          tooltip: $i18n.get({
+            id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.SnapshotGalleryShortcutCtrlX',
+            dm: '快照画廊(快捷键ctrl+x)',
+          }),
           tooltipColor: '#3056e3',
           tooltipPlacement: 'right',
           hasDivider: false,
@@ -294,7 +306,7 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'ContextMenu',
-      name: '右键菜单',
+      name: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.RightClickMenu', dm: '右键菜单' }),
       props: {
         GI_CONTAINER: ['NeighborsQuery', 'ToggleClusterWithMenu', 'PinNodeWithMenu'],
         nodeMenuComponents: ['NeighborsQuery', 'ToggleClusterWithMenu', 'PinNodeWithMenu'],
@@ -306,7 +318,7 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'ToggleClusterWithMenu',
-      name: '展开/收起',
+      name: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.ExpandFoldUp', dm: '展开/收起' }),
       props: {
         isReLayout: false,
         degree: 1,
@@ -314,7 +326,7 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'NeighborsQuery',
-      name: '邻居查询',
+      name: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.NeighborQuery', dm: '邻居查询' }),
       props: {
         serviceId: 'GI/NeighborsQuery',
         degree: '1',
@@ -323,7 +335,7 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'Copyright',
-      name: '版权',
+      name: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.Copyright', dm: '版权' }),
       props: {
         imageUrl: 'https://gw.alipayobjects.com/zos/bmw-prod/c2d4b2f5-2a34-4ae5-86c4-df97f7136105.svg',
         width: 200,
@@ -334,12 +346,12 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'Loading',
-      name: '加载动画',
+      name: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.LoadAnimation', dm: '加载动画' }),
       props: {},
     },
     {
       id: 'PinNodeWithMenu',
-      name: '固定节点(MENU)',
+      name: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.FixedNodeMenu', dm: '固定节点(MENU)' }),
       props: {
         color: '#fff',
         fill: '#262626',
@@ -347,7 +359,10 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'ForceSimulation',
-      name: '力导布局控制器',
+      name: $i18n.get({
+        id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.ForceGuideLayoutController',
+        dm: '力导布局控制器',
+      }),
       props: {
         autoPin: true,
         dragNodeMass: 10000000,
@@ -356,7 +371,10 @@ export const GI_PROJECT_CONFIG = {
           visible: false,
           disabled: false,
           isShowTitle: false,
-          title: '力导布局控制器',
+          title: $i18n.get({
+            id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.ForceGuideLayoutController',
+            dm: '力导布局控制器',
+          }),
           isShowIcon: true,
           icon: 'icon-layout-force',
           isShowTooltip: true,
@@ -371,7 +389,7 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'Initializer',
-      name: '初始化器',
+      name: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.Initializer', dm: '初始化器' }),
       props: {
         serviceId: 'GI/GI_SERVICE_INTIAL_GRAPH',
         schemaServiceId: 'GI/GI_SERVICE_SCHEMA',
@@ -381,18 +399,21 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'LayoutSwitch',
-      name: '布局切换',
+      name: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.LayoutSwitching', dm: '布局切换' }),
       props: {
         GI_CONTAINER_INDEX: 2,
         GIAC: {
           visible: false,
           disabled: false,
           isShowTitle: false,
-          title: '布局切换',
+          title: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.LayoutSwitching', dm: '布局切换' }),
           isShowIcon: true,
           icon: 'icon-layout',
           isShowTooltip: false,
-          tooltip: '一键切换画布布局',
+          tooltip: $i18n.get({
+            id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.SwitchCanvasLayoutWithOne',
+            dm: '一键切换画布布局',
+          }),
           tooltipColor: '#3056e3',
           tooltipPlacement: 'right',
           hasDivider: false,
@@ -403,7 +424,7 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'GrailLayout',
-      name: '圣杯布局',
+      name: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.HolyGrailLayout', dm: '圣杯布局' }),
       props: {
         GI_CONTAINER_LEFT: [],
         leftDisplay: false,
@@ -425,7 +446,7 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'TableMode',
-      name: '表格模式',
+      name: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.TableMode', dm: '表格模式' }),
       props: {
         enableCopy: true,
         isSelectedActive: true,
@@ -434,11 +455,14 @@ export const GI_PROJECT_CONFIG = {
           visible: false,
           disabled: false,
           isShowTitle: true,
-          title: '表格模式',
+          title: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.TableMode', dm: '表格模式' }),
           isShowIcon: true,
           icon: 'icon-table',
           isShowTooltip: true,
-          tooltip: '将画布中的节点和边以表格形式展示',
+          tooltip: $i18n.get({
+            id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.ShowNodesAndEdgesIn',
+            dm: '将画布中的节点和边以表格形式展示',
+          }),
           tooltipColor: '#3056e3',
           tooltipPlacement: 'right',
           hasDivider: false,
@@ -456,18 +480,21 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'InfoDetection',
-      name: '信息检测',
+      name: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.InformationDetection', dm: '信息检测' }),
       props: {
         GI_CONTAINER_INDEX: 2,
         GIAC_CONTENT: {
           visible: false,
           disabled: false,
           isShowTitle: true,
-          title: '信息检测',
+          title: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.InformationDetection', dm: '信息检测' }),
           isShowIcon: true,
           icon: 'icon-infomation',
           isShowTooltip: true,
-          tooltip: '检测画布中孤立点、环等',
+          tooltip: $i18n.get({
+            id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.DetectIsolatedPointsRingsEtc',
+            dm: '检测画布中孤立点、环等',
+          }),
           tooltipColor: '#3056e3',
           tooltipPlacement: 'right',
           hasDivider: false,
@@ -485,7 +512,7 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'SankeyAnalysis',
-      name: '桑基图分析',
+      name: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.SankeyDiagramAnalysis', dm: '桑基图分析' }),
       props: {
         weightField: 'amount',
         GI_CONTAINER_INDEX: 2,
@@ -493,7 +520,7 @@ export const GI_PROJECT_CONFIG = {
           visible: false,
           disabled: false,
           isShowTitle: true,
-          title: '桑基图分析',
+          title: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.SankeyDiagramAnalysis', dm: '桑基图分析' }),
           isShowIcon: true,
           icon: 'icon-sankey',
           isShowTooltip: true,
@@ -515,9 +542,9 @@ export const GI_PROJECT_CONFIG = {
     },
     {
       id: 'ChartAnalysis',
-      name: '图表分析',
+      name: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.ChartAnalysis', dm: '图表分析' }),
       props: {
-        title: '未命名图表',
+        title: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.UnnamedChart', dm: '未命名图表' }),
         chartType: 'columnChart',
         height: 150,
         dataType: 'edges',
@@ -528,11 +555,14 @@ export const GI_PROJECT_CONFIG = {
           visible: false,
           disabled: false,
           isShowTitle: true,
-          title: '图表分析',
+          title: $i18n.get({ id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.ChartAnalysis', dm: '图表分析' }),
           isShowIcon: true,
           icon: 'icon-barchart',
           isShowTooltip: true,
-          tooltip: '图中数据通过统计图表展示分析',
+          tooltip: $i18n.get({
+            id: 'gi-assets-xlab.src.pages.GI_EXPORT_FILES.TheDataInTheGraph',
+            dm: '图中数据通过统计图表展示分析',
+          }),
           tooltipColor: '#3056e3',
           tooltipPlacement: 'right',
           hasDivider: false,
@@ -552,7 +582,9 @@ export const GI_PROJECT_CONFIG = {
 };
 
 /** G6VP 站点选择服务引擎的上下文配置信息 **/
-export const SERVER_ENGINE_CONTEXT = {};
+const SERVER_ENGINE_CONTEXT = {};
 
 /** 导出的主题 **/
-export const THEME_VALUE = 'light';
+const THEME_VALUE = 'light';
+
+export { GI_PROJECT_CONFIG, SERVER_ENGINE_CONTEXT, THEME_VALUE };

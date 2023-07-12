@@ -1,5 +1,6 @@
 import { Empty } from 'antd';
 import React from 'react';
+import $i18n from '../../i18n';
 
 const useComponents = (context, containers) => {
   const { assets, config } = context;
@@ -37,7 +38,14 @@ const useComponents = (context, containers) => {
             id: 'empty',
             icon: 'icon-empty',
             props: {},
-            component: <Empty description="当前容器中无可用资产，请在配置面板中集成" />,
+            component: (
+              <Empty
+                description={$i18n.get({
+                  id: 'gi-assets-xlab.components.XlabLayout.useComponents.NoAssetsAreAvailableIn',
+                  dm: '当前容器中无可用资产，请在配置面板中集成',
+                })}
+              />
+            ),
           },
         ];
       } else {

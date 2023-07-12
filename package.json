@@ -20,9 +20,13 @@
     "build:umd": "webpack  --mode production  -c ./webpack.config.js",
     "serve": "http-server dist -p 9527",
     "start": "umi dev",
+    "start:node_version_18": "NODE_OPTIONS=--openssl-legacy-provider father build --watch",
     "build:es": "father build"
   },
   "dependencies": {
+    "@aligov/global-locale": "^1.0.5",
+    "@aligov/global-string-format": "^1.0.7",
+    "@antv/g2": "^5.0.11",
     "@antv/g6": "4.x",
     "@antv/gi-assets-basic": "latest",
     "@antv/gi-assets-neo4j": "^2.0.4",
@@ -32,7 +36,8 @@
     "antd": "4.x",
     "lodash": "^4.17.21",
     "react": "17.x",
-    "react-dom": "17.x"
+    "react-dom": "17.x",
+    "umi-request": "^1.4.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",

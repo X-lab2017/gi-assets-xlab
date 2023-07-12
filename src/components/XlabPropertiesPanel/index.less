@@ -1,0 +1,51 @@
+.gi-xlab-panel {
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  padding: 8px 16px;
+  .gi-xlab-panel-detail-wrapper {
+    width: 100%;
+    display: inline-flex;
+    overflow-x: scroll;
+    .gi-xlab-panel-detail-one {
+      max-width: 250px;
+      min-width: 150px;
+      border-right: 1px solid var(--border-color);
+      padding: 0 6px;
+      .gi-xlab-panel-detail-item {
+        width: 100%;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        .gi-xlab-panel-detail-color-dot {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          display: inline-flex;
+          margin-right: 4px;
+          transform: translateY(1px);
+        }
+      }
+    }
+    > :last-child {
+      padding-right: 0;
+      border-right: none;
+    }
+    > :first-child {
+      padding-left: 0;
+    }
+  }
+  .gi-xlab-panel-chart-wrapper {
+    text-align: center;
+    padding: 16px 0;
+    .gi-xlab-panel-chart-container {
+      margin-bottom: 16px;
+      .gi-xlab-panel-chart-title {
+        margin-bottom: 0;
+      }
+      .gi-xlab-panel-chart {
+        height: 130px;
+        width: 100%;
+      }
+    }
+  }
+}
