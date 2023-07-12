@@ -24,8 +24,6 @@
     "build:es": "father build"
   },
   "dependencies": {
-    "@ali/global-locale": "^1.0.5",
-    "@ali/global-string-format": "^1.0.7",
     "@aligov/global-locale": "^1.0.5",
     "@aligov/global-string-format": "^1.0.7",
     "@antv/g2": "^5.0.11",
