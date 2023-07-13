@@ -67,9 +67,9 @@ const hexToRgba = (hex, a) => {
 
 const darkOpacity: number = 0.15;
 
-export const getDarkColor = (color: string) => hexToRgba(color, darkOpacity);
+const getDarkColor = (color: string) => hexToRgba(color, darkOpacity);
 
-export const getDarkStyle = shapes => {
+const getDarkStyle = shapes => {
   const dark = {};
   const needDarkKey = ['fill', 'stroke'];
   shapes.forEach(shape => {
@@ -87,7 +87,7 @@ export const getDarkStyle = shapes => {
   return dark;
 };
 
-export const getLabelPosition = (r: number, position: string = 'bottom') => {
+const getLabelPosition = (r: number, position: string = 'bottom') => {
   let textAlign: 'center';
   let textBaseline: 'middle' | 'bottom' | 'top';
   let textY: number;
@@ -118,7 +118,7 @@ export const getLabelPosition = (r: number, position: string = 'bottom') => {
 };
 
 // 获取label shape
-export const getLabelStyle = config => {
+const getLabelStyle = config => {
   const {
     r = 12,
     position = 'bottom',
@@ -143,7 +143,7 @@ export const getLabelStyle = config => {
   };
 };
 
-export enum ITEM_STATE {
+enum ITEM_STATE {
   Active = 'active',
   Default = 'default',
   Selected = 'selected',
@@ -335,4 +335,5 @@ const registerShape = Graphin => {
     },
   });
 };
+export { ITEM_STATE, getLabelStyle, getLabelPosition, getDarkStyle, getDarkColor };
 export default registerShape;

@@ -1,7 +1,8 @@
+import $i18n from '../../i18n';
 const info = {
   id: 'XlabLayout',
-  name: 'Xlab 布局',
-  desc: 'Xlab 布局',
+  name: $i18n.get({ id: 'gi-assets-xlab.components.XlabLayout.info.XlabLayout', dm: 'Xlab 布局' }),
+  desc: $i18n.get({ id: 'gi-assets-xlab.components.XlabLayout.info.XlabLayout', dm: 'Xlab 布局' }),
   cover: 'http://xxx.jpg',
   category: 'system-interaction',
   icon: 'icon-home',

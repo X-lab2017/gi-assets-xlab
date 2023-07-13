@@ -1,6 +1,7 @@
 import { Button, Drawer } from 'antd';
 import * as React from 'react';
 import Server from '../services/Server';
+import $i18n from '../i18n';
 
 interface ServerViewProps {}
 
@@ -13,10 +14,16 @@ const ServerView: React.FunctionComponent<ServerViewProps> = props => {
           setOpen(true);
         }}
       >
-        模拟 自定义服务：连接引擎，模拟这是 GI 站点的外围
+        {$i18n.get({
+          id: 'gi-assets-xlab.src.pages.ServerView.SimulateACustomServiceConnect',
+          dm: '模拟 自定义服务：连接引擎，模拟这是 GI 站点的外围',
+        })}
       </Button>
       <Drawer
-        title="模拟 G6VP 平台的导入数据"
+        title={$i18n.get({
+          id: 'gi-assets-xlab.src.pages.ServerView.SimulateTheImportDataOf',
+          dm: '模拟 G6VP 平台的导入数据',
+        })}
         open={open}
         visible={open}
         width={'80%'}

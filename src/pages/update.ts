@@ -5,7 +5,8 @@ import { GIAssets, GIConfig, extra } from '@antv/gi-sdk';
 /** 自定义数据服务 */
 import MyServer from '../services/index';
 /** 自定义资产 */
-import { Counter, XlabLayout, XlabPropertiesPanel, XlabSearch } from '../components';
+import { XlabPropertiesPanel } from '../components';
+import $i18n from '../i18n';
 
 const { GIAC_CONTENT_PROPS } = extra;
 
@@ -16,10 +17,7 @@ const update = (defaultAssets: GIAssets, defaultConfig: GIConfig, defaultEngine)
     components: {
       ...defaultAssets.components,
       // 将自定义组件加入到资产包中
-      Counter, // 如果资产id和文件名一致，可以这样简写，因为实际是这样的： [Counter.info.id]: Counter,
-      XlabLayout,
-      XlabSearch,
-      XlabPropertiesPanel,
+      XlabPropertiesPanel, // 如果资产id和文件名一致，可以这样简写，因为实际是这样的： [Counter.info.id]: Counter,
     },
   };
 
@@ -40,14 +38,14 @@ const update = (defaultAssets: GIAssets, defaultConfig: GIConfig, defaultEngine)
           containers: [
             {
               id: 'header',
-              name: '顶部容器',
+              name: $i18n.get({ id: 'gi-assets-xlab.src.pages.update.TopContainer', dm: '顶部容器' }),
               required: true,
               GI_CONTAINER: ['XlabSearch'],
               display: true,
             },
             {
               id: 'panel',
-              name: '侧边容器',
+              name: $i18n.get({ id: 'gi-assets-xlab.src.pages.update.SideContainer', dm: '侧边容器' }),
               required: true,
               GI_CONTAINER: ['XlabPropertiesPanel'],
               display: true,
@@ -57,16 +55,16 @@ const update = (defaultAssets: GIAssets, defaultConfig: GIConfig, defaultEngine)
       },
       {
         id: 'XlabSearch',
-        type: 'GIAC_CONTENT',
+        type: 'AUTO', // 'GIAC_CONTENT'
         props: {
-          ...GIAC_CONTENT_PROPS,
+          // ...GIAC_CONTENT_PROPS,
         },
       },
       {
         id: 'XlabPropertiesPanel',
-        type: 'GIAC_CONTENT',
+        type: 'AUTO', // 'GIAC_CONTENT',
         props: {
-          ...GIAC_CONTENT_PROPS,
+          // ...GIAC_CONTENT_PROPS,
         },
       },
     ],

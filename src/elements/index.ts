@@ -1,1 +1,2 @@
-export { default as ClusterNode } from './ClusterNode';
+import ClusterNode from './ClusterNode';
+export { ClusterNode };
