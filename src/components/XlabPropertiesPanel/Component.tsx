@@ -156,11 +156,23 @@ const XlabPropertiesPanel = props => {
               labelAutoHide: true,
             });
         } else {
-          const instance = chart
-            .line()
+          let instance;
+          if (singleNode) {
+            instance = chart
+              .interval()
+              .transform({ type: 'stackY' })
+              .encode('color', 'subType')
+              .scale('color', { palette: 'accent' });
+          } else {
+            instance = chart
+              .line()
+              .encode('color', d => COLORS[orderTypes.indexOf(d.modelKey) % COLORS.length])
+              .scale('color', { type: 'identity' });
+          }
+          instance
             .data(chartDatas[fieldName])
             .legend(false)
-            .encode('x', d => new Date(d.date))
+            .encode('x', 'date') // d => new Date(d.date)
             .encode('y', 'count')
             .axis('x', {
               labelAutoHide: true,
@@ -171,13 +183,6 @@ const XlabPropertiesPanel = props => {
               title: `${data.date}`,
             }))
             .state('active', { lineWidth: 4 });
-          if (!singleNode) {
-            instance
-              .encode('color', d => COLORS[orderTypes.indexOf(d.modelKey) % COLORS.length])
-              .scale('color', { type: 'identity' });
-          } else {
-            instance.encode('color', 'subType').scale('color', { palette: 'accent' });
-          }
         }
         chart.interaction('elementHighlight', true);
         chart.render();
