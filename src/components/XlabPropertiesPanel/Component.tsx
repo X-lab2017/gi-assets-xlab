@@ -162,26 +162,31 @@ const XlabPropertiesPanel = props => {
               .interval()
               .transform({ type: 'stackY' })
               .encode('color', 'subType')
-              .scale('color', { palette: 'accent' });
+              .scale('color', { palette: 'accent' })
+              .tooltip(data => ({
+                name: data.subType,
+                value: data.count,
+                title: `${data.date}`,
+              }));
           } else {
             instance = chart
               .line()
               .encode('color', d => COLORS[orderTypes.indexOf(d.modelKey) % COLORS.length])
-              .scale('color', { type: 'identity' });
+              .scale('color', { type: 'identity' })
+              .tooltip(data => ({
+                name: data.name,
+                value: data.count,
+                title: `${data.date}`,
+              }));
           }
           instance
             .data(chartDatas[fieldName])
             .legend(false)
-            .encode('x', 'date') // d => new Date(d.date)
+            .encode('x', 'date')
             .encode('y', 'count')
             .axis('x', {
               labelAutoHide: true,
             })
-            .tooltip(data => ({
-              name: data.name,
-              value: data.count,
-              title: `${data.date}`,
-            }))
             .state('active', { lineWidth: 4 });
         }
         chart.interaction('elementHighlight', true);
