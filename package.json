@@ -26,11 +26,11 @@
   "dependencies": {
     "@aligov/global-locale": "^1.0.5",
     "@aligov/global-string-format": "^1.0.7",
-    "@antv/g2": "^5.0.11",
+    "@antv/g2": "^5.0.16",
     "@antv/g6": "4.x",
     "@antv/gi-assets-basic": "latest",
     "@antv/gi-assets-neo4j": "^2.0.4",
-    "@antv/gi-sdk": "latest",
+    "@antv/gi-sdk": "workspace:*",
     "@antv/gi-theme-antd": "latest",
     "@antv/graphin": "^2.7.14",
     "ahooks": "^3.7.8",

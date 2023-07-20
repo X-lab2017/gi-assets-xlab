@@ -90,5 +90,6 @@
   "gi-assets-xlab.components.XlabPropertiesPanel.Component.NodeType": "节点类型",
   "gi-assets-xlab.components.XlabPropertiesPanel.Component.EdgeType": "边类型",
   "gi-assets-xlab.components.XlabPropertiesPanel.Component.CanvasOverview": "画布概览",
-  "gi-assets-xlab.components.XlabPropertiesPanel.Component.PleaseRequestDataFirstAnd": "请先请求数据，然后单选或按住 shift 框选 Repo、User 节点可查看详情"
+  "gi-assets-xlab.components.XlabPropertiesPanel.Component.PleaseRequestDataFirstAnd": "请先请求数据，然后单选或按住 shift 框选 Repo、User 节点可查看详情",
+  "gi-assets-xlab.components.XlabPropertiesPanel.Component.NoCharts": "该节点暂无指标"
 }

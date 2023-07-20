@@ -30,12 +30,14 @@ const XlabSearch = props => {
     const val = await searchService({ name: formatContent(content), isUser: type === 'user' });
     if (val.data?.result) {
       const nodes = JSON.parse(val.data.result);
-      setSearchOptions(
-        Object.keys(nodes).map(id => ({
-          value: id,
-          label: `${nodes[id]}(${id})`,
-        })),
-      );
+      if (nodes) {
+        setSearchOptions(
+          Object.keys(nodes).map(id => ({
+            value: id,
+            label: `${nodes[id]}(${id})`,
+          })),
+        );
+      }
     }
     setLoading(false);
     setCurrentContent(content);
@@ -44,13 +46,14 @@ const XlabSearch = props => {
   const handleSelect = debounce(async (val, option) => {
     if (!option?.value) return;
     // find same node on the graph first
-    const graphNodes = graph.getNodes().filter(node => (node.getModel() as any).properties.id.toString() === val);
+    const graphNodes = graph.getNodes().filter(node => (node.getModel() as any).properties.id?.toString() === val);
     if (graphNodes.length) {
       graph.focusItems(graphNodes);
     } else {
       // add node to the origin data
       setLoading(true);
-      let statement = `MATCH (n) where n.id=${val} return n`;
+      const schemaType = type === 'repo' ? 'github_repo' : 'github_user';
+      const statement = `MATCH (n:${schemaType} {id:${val}}) RETURN n`;
       const resultData = await queryService({
         value: statement,
         limit: 1,
