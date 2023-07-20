@@ -1,0 +1,86 @@
+Arguments: 
+  /Users/shiwu/.nvm/versions/node/v20.3.0/bin/node /opt/homebrew/Cellar/yarn/1.22.17_2/libexec/bin/yarn.js install
+
+PATH: 
+  /Users/shiwu/.nvm/versions/node/v20.3.0/bin:/Users/shiwu/Library/pnpm:/Library/Frameworks/Python.framework/Versions/3.10/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/shiwu/.nvm/versions/node/v20.3.0/bin:/Users/shiwu/Library/pnpm:/Library/Frameworks/Python.framework/Versions/3.10/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/shiwu/.cargo/bin
+
+Yarn version: 
+  1.22.17
+
+Node version: 
+  20.3.0
+
+Platform: 
+  darwin arm64
+
+Trace: 
+  Error: EEXIST: file already exists, mkdir '/Users/shiwu/code/G6VP-xlab/G6VP/packages/gi-assets-xlab/node_modules/antd/node_modules'
+
+npm manifest: 
+  {
+    "name": "gi-assets-xlab",
+    "version": "0.1.0",
+    "description": "A G6VP asset for X-lab.",
+    "keywords": [
+      "G6VP",
+      "gi-asstes"
+    ],
+    "license": "MIT",
+    "main": "lib/index.js",
+    "module": "es/index.js",
+    "types": "lib/index.d.ts",
+    "files": [
+      "dist",
+      "es",
+      "lib"
+    ],
+    "scripts": {
+      "build": "father build && npm run build:umd",
+      "build:umd": "webpack  --mode production  -c ./webpack.config.js",
+      "serve": "http-server dist -p 9527",
+      "start": "umi dev",
+      "start:node_version_18": "NODE_OPTIONS=--openssl-legacy-provider father build --watch",
+      "build:es": "father build"
+    },
+    "dependencies": {
+      "@aligov/global-locale": "^1.0.5",
+      "@aligov/global-string-format": "^1.0.7",
+      "@antv/g2": "^5.0.11",
+      "@antv/g6": "4.x",
+      "@antv/gi-assets-basic": "latest",
+      "@antv/gi-assets-neo4j": "^2.0.4",
+      "@antv/gi-sdk": "workspace:*",
+      "@antv/gi-theme-antd": "latest",
+      "@antv/graphin": "^2.7.14",
+      "ahooks": "^3.7.8",
+      "antd": "4.x",
+      "lodash": "^4.17.21",
+      "react": "17.x",
+      "react-dom": "17.x",
+      "umi-request": "^1.4.0"
+    },
+    "devDependencies": {
+      "@types/react": "^18.0.0",
+      "@types/react-dom": "^18.0.0",
+      "father": "^2.30.6",
+      "http-server": "^14.1.1",
+      "mini-css-extract-plugin": "^2.7.2",
+      "ts-loader": "^9.4.2",
+      "typescript": "^4.1.2",
+      "umi": "3.x",
+      "webpack": "^5.75.0",
+      "webpack-cli": "^5.0.1"
+    },
+    "authors": [
+      "tangyenan@gmail.com"
+    ],
+    "overrides": {
+      "@antv/gi-sdk": "latest"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

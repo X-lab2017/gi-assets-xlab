@@ -90,5 +90,6 @@
   "gi-assets-xlab.components.XlabPropertiesPanel.Component.NodeType": "Node type",
   "gi-assets-xlab.components.XlabPropertiesPanel.Component.EdgeType": "Edge type",
   "gi-assets-xlab.components.XlabPropertiesPanel.Component.CanvasOverview": "Canvas overview",
-  "gi-assets-xlab.components.XlabPropertiesPanel.Component.PleaseRequestDataFirstAnd": "Please request data first, and then select the Repo and User nodes by single choice or hold down the shift box to view the details."
+  "gi-assets-xlab.components.XlabPropertiesPanel.Component.PleaseRequestDataFirstAnd": "Please request data first, and then select the Repo and User nodes by single choice or hold down the shift box to view the details.",
+  "gi-assets-xlab.components.XlabPropertiesPanel.Component.NoCharts": "There is no charts on this node"
 }

@@ -8,20 +8,34 @@
     width: 100%;
     display: inline-flex;
     overflow-x: scroll;
+    .gi-xlab-panel-detail-multi {
+      &:hover {
+        border: 1px solid var(--text-color-2);
+        border-radius: 6px;
+      }
+    }
     .gi-xlab-panel-detail-one {
       max-width: 250px;
       min-width: 150px;
       border: 1px solid var(--background-color);
       border-right: 1px solid var(--border-color);
       padding: 0 6px;
-      &:hover {
-        border: 1px solid var(--text-color-2);
-      }
       .gi-xlab-panel-detail-item {
         width: 100%;
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
+        .gi-xlab-panel-detail-title {
+          font-size: 20px;
+          font-weight: 700;
+          line-height: 46px;
+        }
+        .gi-xlab-panel-detail-title-disabled {
+          color: var(--text-color);
+          cursor: not-allowed;
+          text-decoration: none;
+          pointer-events: none;
+        }
         .gi-xlab-panel-detail-color-dot {
           width: 12px;
           height: 12px;
