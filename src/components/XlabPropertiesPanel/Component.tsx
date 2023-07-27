@@ -149,13 +149,13 @@ const XlabPropertiesPanel = props => {
 
       const staticPromises = repoUserModels
         .map(async model => {
+          const { id, name } = model;
           return Object.keys(STATIC_FIELD).map(fieldName => {
             const key = STATIC_FIELD[fieldName];
-            const url = `https://oss.x-lab.info/open_digger/github/square/okhttp/${key}.json`;
+            const url = `https://oss.x-lab.info/open_digger/github/${name}/${key}.json`;
             return fetch(url)
               .then(response => response.json())
               .then(data => {
-                const { id, name } = model;
                 const modelKey = `${name}(${id})`;
                 cachedStateicData[modelKey] = cachedStateicData[modelKey] || {};
                 cachedStateicData[modelKey][key] = data;
