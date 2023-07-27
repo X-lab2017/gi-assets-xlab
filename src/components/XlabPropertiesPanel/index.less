@@ -14,21 +14,31 @@
         border-radius: 6px;
       }
     }
-    .gi-xlab-panel-detail-one {
+    .gi-xlab-panel-detail-multi {
       max-width: 250px;
       min-width: 150px;
+    }
+    .gi-xlab-panel-detail-one {
+      width: 100%;
       border: 1px solid var(--background-color);
       border-right: 1px solid var(--border-color);
       padding: 0 6px;
+      .gi-xlab-panel-detail-properties-wrapper {
+        max-height: 200px;
+        overflow-y: scroll;
+      }
       .gi-xlab-panel-detail-item {
         width: 100%;
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
+        font-size: 10px;
+        margin-bottom: 4px;
         .gi-xlab-panel-detail-title {
           font-size: 20px;
           font-weight: 700;
-          line-height: 46px;
+          line-height: 16px;
+          font-size: 14px;
         }
         .gi-xlab-panel-detail-title-disabled {
           color: var(--text-color);
@@ -79,7 +89,7 @@
       margin-bottom: 8px;
     }
     .gi-xlab-panel-overview-chart {
-      height: 260px;
+      height: 220px;
       width: 100%;
     }
   }

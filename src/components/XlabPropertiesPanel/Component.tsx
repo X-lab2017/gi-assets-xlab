@@ -2,10 +2,11 @@ import { useContext, utils } from '@antv/gi-sdk';
 import { useMemoizedFn } from 'ahooks';
 import { Chart } from '@antv/g2';
 import { LoadingOutlined } from '@ant-design/icons';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Empty, Divider, Tooltip, message } from 'antd';
+import React, { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import { Empty, Divider, Tooltip, message, Radio, Select, Form } from 'antd';
 import $i18n from '../../i18n';
 import './index.less';
+import { COLORS, createChart, createTransposeIntervalChart, getTypeNodeModels, getTypeNodes } from './util';
 
 const charts: { [key: string]: Chart | undefined } = {
   fork: undefined,
@@ -16,31 +17,22 @@ const charts: { [key: string]: Chart | undefined } = {
   edgeType: undefined,
 };
 
-const COLORS = [
-  'rgb(96,145,246)',
-  'rgb(97,214,167)',
-  'rgb(94,112,145)',
-  'rgb(244,189,52)',
-  'rgb(113,100,245)',
-  'rgb(115,200,234)',
-  'rgb(147,98,183)',
-  'rgb(252,153,79)',
-  'rgb(42,147,146)',
-];
+const cachedStateicData = {};
 
 const XlabPropertiesPanel = props => {
   const { serviceId, width = '400px' } = props;
   const { graph, services, data, config } = useContext();
   const service = utils.getService(services, serviceId);
-  if (!service) {
-    return null;
-  }
+  if (!service) return null;
+  const [form] = Form.useForm();
 
   const [models, setModels] = useState([] as any);
   const [totals, setTotals] = useState<any>(undefined);
   const [loading, setLoading] = useState(false);
   const [colorMap, setColorMap] = useState({});
   const [overviewData, setOverviewData] = useState({ node: {}, edge: {} });
+  const [rankingType, setRankingType] = useState('github_repo');
+  const [rankingDimension, setRankingDimension] = useState('Star');
 
   const containerRefs = {
     Fork: useRef<HTMLDivElement>(null),
@@ -50,10 +42,15 @@ const XlabPropertiesPanel = props => {
     Code: useRef<HTMLDivElement>(null),
     Comments: useRef<HTMLDivElement>(null),
     Commits: useRef<HTMLDivElement>(null),
+    OpenRank: useRef<HTMLDivElement>(null),
+    Activity: useRef<HTMLDivElement>(null),
+    Ranking: useRef<HTMLDivElement>(null),
   };
   const overviewRefs = {
     nodeType: useRef<HTMLDivElement>(null),
     edgeType: useRef<HTMLDivElement>(null),
+    OpenRank: useRef<HTMLDivElement>(null),
+    Activity: useRef<HTMLDivElement>(null),
   };
 
   const DETAIL_SCHEMA_TYPES = ['github_repo', 'github_user'];
@@ -67,6 +64,11 @@ const XlabPropertiesPanel = props => {
     Commits: ['commits'],
   };
 
+  const STATIC_FIELD = {
+    OpenRank: 'openrank',
+    Activity: 'activity',
+  };
+
   useEffect(() => {
     graph.on('canvas:click', handleCanvasClick);
     graph.on('nodeselectchange', handleNodeSelect);
@@ -77,8 +79,9 @@ const XlabPropertiesPanel = props => {
   }, [graph]);
 
   useEffect(() => {
-    const repoUserModels = models.filter(model => DETAIL_SCHEMA_TYPES.includes(model.schemaType));
+    const repoUserModels = getTypeNodeModels(models, DETAIL_SCHEMA_TYPES);
     if (!repoUserModels.length) return;
+
     (async () => {
       setLoading(true);
       const chartDatas = {
@@ -95,10 +98,10 @@ const XlabPropertiesPanel = props => {
       const singleNode = repoUserModels.length === 1;
 
       const promises: Promise<any>[] = repoUserModels.map(async (model, i) => {
-        const { id, name, schemaType } = model;
+        const { id, name, nodeType } = model;
         dotColorMap[id] = COLORS[i % COLORS.length];
         orderTypes.push(`${name}(${id})`);
-        const val = await service({ id, schemaType: schemaType === 'github_repo' ? 'repo' : 'user' });
+        const val = await service({ id, nodeType: nodeType === 'github_repo' ? 'repo' : 'user' });
         if (val.data.result) {
           const value = (Object.values(JSON.parse(val.data.result)) as any)[0];
           const totalMap = {};
@@ -135,64 +138,50 @@ const XlabPropertiesPanel = props => {
         chartDatas[fieldName].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
         chartDatas[fieldName].sort((a, b) => orderTypes.indexOf(a.modelKey) - orderTypes.indexOf(b.modelKey));
         destroyChart(fieldName, containerRefs[fieldName]);
-        const chart = new Chart({
-          container: containerRefs[fieldName].current!,
-          theme: 'classic',
-          autoFit: true,
-          paddingLeft: 42,
-          paddingRight: 24,
-          paddingTop: 10,
-        });
-        if (fieldName === 'Star') {
-          chart
-            .interval()
-            .data(chartDatas[fieldName])
-            .encode('x', 'date')
-            .encode('y', 'count')
-            .transform({ type: 'dodgeX' })
-            .encode('color', d => COLORS[orderTypes.indexOf(d.modelKey) % COLORS.length])
-            .scale('color', { type: 'identity' })
-            .axis('x', {
-              labelAutoHide: true,
-            });
-        } else {
-          let instance;
-          if (singleNode) {
-            instance = chart
-              .interval()
-              .transform({ type: 'stackY' })
-              .encode('color', 'subType')
-              .scale('color', { palette: 'accent' })
-              .tooltip(data => ({
-                name: data.subType,
-                value: data.count,
-                title: `${data.date}`,
-              }));
-          } else {
-            instance = chart
-              .line()
-              .encode('color', d => COLORS[orderTypes.indexOf(d.modelKey) % COLORS.length])
-              .scale('color', { type: 'identity' })
-              .tooltip(data => ({
-                name: data.name,
-                value: data.count,
-                title: `${data.date}`,
-              }));
-          }
-          instance
-            .data(chartDatas[fieldName])
-            .legend(false)
-            .encode('x', 'date')
-            .encode('y', 'count')
-            .axis('x', {
-              labelAutoHide: true,
-            })
-            .state('active', { lineWidth: 4 });
-        }
-        chart.interaction('elementHighlight', true);
-        chart.render();
-        charts[fieldName] = chart;
+        charts[fieldName] = createChart(
+          fieldName,
+          chartDatas[fieldName],
+          containerRefs[fieldName].current,
+          orderTypes,
+          singleNode,
+        );
       });
+
+      const staticPromises = repoUserModels
+        .map(async model => {
+          return Object.keys(STATIC_FIELD).map(fieldName => {
+            const key = STATIC_FIELD[fieldName];
+            const url = `https://oss.x-lab.info/open_digger/github/square/okhttp/${key}.json`;
+            return fetch(url)
+              .then(response => response.json())
+              .then(data => {
+                const { id, name } = model;
+                const modelKey = `${name}(${id})`;
+                cachedStateicData[modelKey] = cachedStateicData[modelKey] || {};
+                cachedStateicData[modelKey][key] = data;
+                const openrankData = Object.keys(data).map(date => ({
+                  date,
+                  count: data[date],
+                  modelKey,
+                  subType: key,
+                  name,
+                  id,
+                }));
+                openrankData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+                openrankData.sort((a, b) => orderTypes.indexOf(a.modelKey) - orderTypes.indexOf(b.modelKey));
+                destroyChart(fieldName, containerRefs[fieldName]);
+                charts[fieldName] = createChart(
+                  fieldName,
+                  openrankData,
+                  containerRefs[fieldName].current,
+                  orderTypes,
+                  false,
+                );
+              });
+          });
+        })
+        .flat();
+      await Promise.all(staticPromises);
 
       if (!singleNode) setColorMap(dotColorMap);
       setLoading(false);
@@ -204,13 +193,10 @@ const XlabPropertiesPanel = props => {
     const nodeTypeMap: any = {};
     const edgeTypeMap: any = {};
     graph.getNodes().forEach((node: any) => {
-      const { properties, nodeType, name } = node.getModel();
+      const { id, nodeType, name } = node.getModel();
       if (!nodeType) return;
       nodeTypeMap[nodeType] = nodeTypeMap[nodeType] || [];
-      nodeTypeMap[nodeType].push({
-        id: properties.id,
-        name,
-      });
+      nodeTypeMap[nodeType].push({ id, name });
     });
     graph.getEdges().forEach((edge: any) => {
       const { label, id } = edge.getModel();
@@ -245,7 +231,8 @@ const XlabPropertiesPanel = props => {
         container: overviewRefs[`${itemType}Type`].current!,
         theme: 'classic',
         autoFit: true,
-        padding: 'auto',
+        paddingTop: 0,
+        paddingBottom: 0,
       });
       chart.coordinate({ type: 'theta', innerRadius: 0.25, outerRadius: 0.8 });
       chart
@@ -302,6 +289,11 @@ const XlabPropertiesPanel = props => {
     });
   }, [overviewData, models]);
 
+  useEffect(() => {
+    if (models?.length) return;
+    renderRankingChart();
+  }, [overviewData, models, rankingType, rankingDimension]);
+
   const handleNodeSelect = e => {
     const { selectedItems, select } = e;
     if (!select || !selectedItems?.nodes?.length) return;
@@ -309,17 +301,21 @@ const XlabPropertiesPanel = props => {
     destroyChart('edgeType', overviewRefs.edgeType);
     const showModels = selectedItems.nodes
       .map(item => {
-        const { properties, nodeType: schemaType, name } = item.getModel();
-        return {
-          id: properties.id,
+        const { id, properties, nodeType, name } = item.getModel();
+        const showProperties = {
           name,
-          schemaType,
+          nodeType,
           ...properties,
+          id,
         };
+        Object.keys(showProperties).forEach(field => {
+          if (showProperties[field] === null) delete showProperties[field];
+        });
+        return showProperties;
       })
       .sort((a, b) => {
-        const aHasDetail = DETAIL_SCHEMA_TYPES.includes(a.schemaType) ? 1 : -1;
-        const bHasDetail = DETAIL_SCHEMA_TYPES.includes(b.schemaType) ? 1 : -1;
+        const aHasDetail = DETAIL_SCHEMA_TYPES.includes(a.nodeType) ? 1 : -1;
+        const bHasDetail = DETAIL_SCHEMA_TYPES.includes(b.nodeType) ? 1 : -1;
         return bHasDetail - aHasDetail;
       });
 
@@ -348,10 +344,110 @@ const XlabPropertiesPanel = props => {
     );
   };
 
+  const renderRankingChart = async () => {
+    setLoading(true);
+    setRankingDimension(rankingDimension);
+    const nodes = getTypeNodes(graph, [rankingType]).map(node => node.getModel());
+    let data: any = [];
+    if (rankingDimension === 'Star' || rankingDimension === 'Commits') {
+      data = nodes.map(node => {
+        const { id, name, star, commits } = node;
+        return {
+          key: `${name}(${id})`,
+          dataId: id,
+          ranking: rankingDimension === 'Star' ? star : commits,
+        };
+      });
+    } else {
+      const promises = nodes
+        .map(async node => {
+          const { id, name } = node;
+          // date supports switching ?
+          const currentDate = new Date();
+          const monthStr = String(currentDate.getMonth());
+          const dateKey = `${currentDate.getFullYear()}-${monthStr.length < 2 ? 0 : ''}${monthStr}`;
+
+          const nodeKey = `${name}(${id})`;
+          if (cachedStateicData[nodeKey]?.[rankingDimension]) {
+            data.push({
+              key: nodeKey,
+              dataId: id,
+              ranking: cachedStateicData[nodeKey][rankingDimension][dateKey],
+            });
+            return;
+          }
+          return await fetch(`https://oss.x-lab.info/open_digger/github/${name}/${rankingDimension.toLowerCase()}.json`)
+            .then(response => {
+              if (!response.ok) return;
+              return response.json();
+            })
+            .then(rankData => {
+              cachedStateicData[nodeKey] = cachedStateicData[nodeKey] || {};
+              cachedStateicData[nodeKey][rankingDimension] = rankData;
+              if (!rankData) {
+                data.push({
+                  key: nodeKey,
+                  dataId: id,
+                  ranking: 0,
+                });
+                return;
+              }
+              if (rankData[dateKey] !== undefined) {
+                data.push({
+                  key: nodeKey,
+                  dataId: id,
+                  ranking: rankData[dateKey],
+                });
+              }
+            });
+        })
+        .filter(Boolean);
+      await Promise.all(promises);
+    }
+
+    // Map the value to the node size
+    let min = Infinity;
+    let max = -Infinity;
+    const NODE_VISUAL_RANGE = [16, 64];
+    const nodeVisualRange = NODE_VISUAL_RANGE[1] - NODE_VISUAL_RANGE[0];
+    data.forEach(item => {
+      if (item.ranking < min) min = item.ranking;
+      if (item.ranking > max) max = item.ranking;
+    });
+    const nodeValueRange = max - min;
+    data.forEach(item => {
+      const { ranking, dataId } = item;
+      const size = ((ranking - min) / nodeValueRange) * nodeVisualRange + NODE_VISUAL_RANGE[0];
+      const node = graph.findById(dataId);
+      if (!node) return;
+      const { size: modelSize, style } = node.getModel();
+      graph.updateItem(dataId, {
+        size,
+        oriSize: modelSize || style?.keyshape.size || 30,
+        // 兼容 graphin-circle
+        style: {
+          keyshape: {
+            size,
+          },
+          icon: {
+            size: size / 2,
+          },
+        },
+      });
+    });
+
+    destroyChart('Ranking', containerRefs.Ranking);
+    charts.Ranking = createTransposeIntervalChart(data, containerRefs.Ranking.current, graph);
+    setLoading(false);
+  };
+
   const overview = useMemo(() => {
     const hasData = data?.nodes?.length;
+    const hasRepoUserNode = getTypeNodeModels(data.nodes, DETAIL_SCHEMA_TYPES).length;
+    const hasRepoNode = getTypeNodeModels(data.nodes, ['github_repo']).length;
+    const hasUserNode = getTypeNodeModels(data.nodes, ['github_user']).length;
     return (
-      <div className="gi-xlab-panel-overview-wrapper">
+      <Form form={form} className="gi-xlab-panel-overview-wrapper">
         {hasData ? (
           <>
             <h3>
@@ -361,8 +457,58 @@ const XlabPropertiesPanel = props => {
               })}
             </h3>
             <Divider className="gi-xlab-panel-overview-divider" type="horizontal" />
-            <div className="gi-xlab-panel-overview-chart" ref={overviewRefs.nodeType} />
-            <div className="gi-xlab-panel-overview-chart" ref={overviewRefs.edgeType} />
+            <div
+              style={!data.nodes.length ? { visibility: 'hidden', height: 0 } : {}}
+              className="gi-xlab-panel-overview-chart"
+              ref={overviewRefs.nodeType}
+            />
+            <div
+              style={!data.edges.length ? { visibility: 'hidden', height: 0 } : {}}
+              className="gi-xlab-panel-overview-chart"
+              ref={overviewRefs.edgeType}
+            />
+            <div
+              className="gi-xlab-panel-ranking-wrapper"
+              style={!hasRepoUserNode ? { visibility: 'hidden', height: 0 } : {}}
+            >
+              <Divider className="gi-xlab-panel-overview-divider" type="horizontal" />
+              <h4 className="gi-xlab-panel-ranking-title">排行榜</h4>
+              <div className="gi-xlab-panel-ranking-dimension">
+                <Radio.Group
+                  size="middle"
+                  options={[
+                    { label: 'Repo', value: 'github_repo', disabled: !hasRepoNode },
+                    { label: 'User', value: 'github_user', disabled: !hasUserNode },
+                  ]}
+                  onChange={ele => {
+                    const val = ele.target?.value || 'github_repo';
+                    setRankingType(val);
+                    if (val === 'github_user' && (rankingDimension === 'Star' || rankingDimension === 'Commits')) {
+                      form.setFieldValue('rankingDimension', 'OpenRank');
+                      setRankingDimension('OpenRank');
+                    }
+                  }}
+                  optionType="button"
+                  defaultValue={hasRepoNode ? 'github_repo' : 'github_user'}
+                  disabled={!hasRepoUserNode}
+                />
+                <Form.Item
+                  name="rankingDimension"
+                  initialValue={rankingType === 'github_repo' ? 'Star' : 'OpenRank'}
+                  style={{ display: 'inline-flex', marginLeft: '8px' }}
+                >
+                  <Select
+                    style={{ width: '150px' }}
+                    onChange={setRankingDimension}
+                    options={(rankingType === 'github_repo'
+                      ? ['Star', 'OpenRank', 'Activity', 'Commits']
+                      : ['OpenRank', 'Activity']
+                    ).map(value => ({ label: value, value }))}
+                  />
+                </Form.Item>
+              </div>
+              <div className="gi-xlab-panel-overview-chart" ref={containerRefs.Ranking}></div>
+            </div>
           </>
         ) : (
           <Empty
@@ -374,31 +520,38 @@ const XlabPropertiesPanel = props => {
             })}
           />
         )}
-      </div>
+      </Form>
     );
-  }, [models, data]);
+  }, [models, data, rankingType]);
 
   const destroyChart = (key, ref) => {
     if (!charts[key]) return;
     charts[key]?.clear();
-    ref?.current?.childNodes.forEach(child => child.remove());
+    if (ref?.current) {
+      ref.current.childNodes.forEach(child => ref.current.removeChild(child));
+      ref.current.innerHTML = '';
+    }
   };
 
   const handleHighlightChart = (evt, model) => {
     evt.stopPropagation();
     if (models.length < 2) return;
     const { name, id } = model;
-    Object.keys(DETAIL_FIELDS).forEach(fieldName => {
-      charts[fieldName]?.emit('element:unhighlight', {});
-      charts[fieldName]?.emit('element:highlight', {
-        data: { data: { modelKey: `${name}(${id})` } },
+    Object.keys(DETAIL_FIELDS)
+      .concat(Object.keys(STATIC_FIELD))
+      .forEach(fieldName => {
+        charts[fieldName]?.emit('element:unhighlight', {});
+        charts[fieldName]?.emit('element:highlight', {
+          data: { data: { modelKey: `${name}(${id})` } },
+        });
       });
-    });
   };
   const handleUnhighlightChart = () => {
-    Object.keys(DETAIL_FIELDS).forEach(fieldName => {
-      charts[fieldName]?.emit('element:unhighlight', {});
-    });
+    Object.keys(DETAIL_FIELDS)
+      .concat(Object.keys(STATIC_FIELD))
+      .forEach(fieldName => {
+        charts[fieldName]?.emit('element:unhighlight', {});
+      });
   };
 
   const hasNoCharts = useMemo(() => totals && !Object.values(totals).find(num => num !== 0), [totals]);
@@ -439,13 +592,15 @@ const XlabPropertiesPanel = props => {
                     </a>
                   </p>
                 </Tooltip>
-                {Object.keys(model).map(field => (
-                  <Tooltip title={`${field}: ${model[field]}`}>
-                    <p className="gi-xlab-panel-detail-item" onClick={() => handleCopyText(model[field])}>
-                      {field}: {model[field]}
-                    </p>
-                  </Tooltip>
-                ))}
+                <div className="gi-xlab-panel-detail-properties-wrapper">
+                  {Object.keys(model).map(field => (
+                    <Tooltip title={`${field}: ${model[field]}`}>
+                      <p className="gi-xlab-panel-detail-item" onClick={() => handleCopyText(model[field])}>
+                        {field}: {model[field]}
+                      </p>
+                    </Tooltip>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
@@ -458,7 +613,7 @@ const XlabPropertiesPanel = props => {
             ''
           )}
 
-          {models.filter(model => DETAIL_SCHEMA_TYPES.includes(model.schemaType)).length ? (
+          {getTypeNodeModels(models, DETAIL_SCHEMA_TYPES).length ? (
             <div className="gi-xlab-panel-chart-wrapper" style={{ visibility: loading ? 'hidden' : 'visible' }}>
               {hasNoCharts ? (
                 <Empty
@@ -472,57 +627,30 @@ const XlabPropertiesPanel = props => {
               ) : (
                 ''
               )}
-              <div
-                className="gi-xlab-panel-chart-container"
-                style={totals?.Star === 0 ? { visibility: 'hidden', height: 0 } : {}}
-              >
-                <h4 className="gi-xlab-panel-chart-title">{`Star History${totals ? `(${totals.Star})` : ''}`}</h4>
-                <div className="gi-xlab-panel-star-chart gi-xlab-panel-chart" ref={containerRefs.Star}></div>
-              </div>
-              <div
-                className="gi-xlab-panel-chart-container"
-                style={totals?.Fork === 0 ? { visibility: 'hidden', height: 0 } : {}}
-              >
-                <h4 className="gi-xlab-panel-chart-title">{`Fork History${totals ? `(${totals.Fork})` : ''}`}</h4>
-                <div className="gi-xlab-panel-fork-chart gi-xlab-panel-chart" ref={containerRefs.Fork} />
-              </div>
-              <div
-                className="gi-xlab-panel-chart-container"
-                style={totals?.Issue === 0 ? { visibility: 'hidden', height: 0 } : {}}
-              >
-                <h4 className="gi-xlab-panel-chart-title">{`Issue History${totals ? `(${totals.Issue})` : ''}`}</h4>
-                <div className="gi-xlab-panel-issue-chart gi-xlab-panel-chart" ref={containerRefs.Issue}></div>
-              </div>
-              <div
-                className="gi-xlab-panel-chart-container"
-                style={totals?.PR === 0 ? { visibility: 'hidden', height: 0 } : {}}
-              >
-                <h4 className="gi-xlab-panel-chart-title">{`PR History${totals ? `(${totals.PR})` : ''}`}</h4>
-                <div className="gi-xlab-panel-pr-chart gi-xlab-panel-chart" ref={containerRefs.PR}></div>
-              </div>
-              <div
-                className="gi-xlab-panel-chart-container"
-                style={totals?.Code === 0 ? { visibility: 'hidden', height: 0 } : {}}
-              >
-                <h4 className="gi-xlab-panel-chart-title">{`Code History${totals ? `(${totals.Code})` : ''}`}</h4>
-                <div className="gi-xlab-panel-pr-chart gi-xlab-panel-chart" ref={containerRefs.Code}></div>
-              </div>
-              <div
-                className="gi-xlab-panel-chart-container"
-                style={totals?.Commits === 0 ? { visibility: 'hidden', height: 0 } : {}}
-              >
-                <h4 className="gi-xlab-panel-chart-title">{`Commits History${totals ? `(${totals.Commits})` : ''}`}</h4>
-                <div className="gi-xlab-panel-pr-chart gi-xlab-panel-chart" ref={containerRefs.Commits}></div>
-              </div>
-              <div
-                className="gi-xlab-panel-chart-container"
-                style={totals?.Comments === 0 ? { visibility: 'hidden', height: 0 } : {}}
-              >
-                <h4 className="gi-xlab-panel-chart-title">{`Comments History${
-                  totals ? `(${totals.Comments})` : ''
-                }`}</h4>
-                <div className="gi-xlab-panel-pr-chart gi-xlab-panel-chart" ref={containerRefs.Comments}></div>
-              </div>
+              {Object.keys(STATIC_FIELD).map(key => (
+                <div
+                  className="gi-xlab-panel-chart-container"
+                  style={!getTypeNodeModels(models, ['github_repo']).length ? { visibility: 'hidden', height: 0 } : {}}
+                >
+                  <h4 className="gi-xlab-panel-chart-title">{`${key} History`}</h4>
+                  <div
+                    className={`gi-xlab-panel-${key.toLowerCase()}-chart gi-xlab-panel-chart`}
+                    ref={containerRefs[key]}
+                  ></div>
+                </div>
+              ))}
+              {Object.keys(DETAIL_FIELDS).map(key => (
+                <div
+                  className="gi-xlab-panel-chart-container"
+                  style={totals?.[key] === 0 ? { visibility: 'hidden', height: 0 } : {}}
+                >
+                  <h4 className="gi-xlab-panel-chart-title">{`${key} History${totals ? `(${totals[key]})` : ''}`}</h4>
+                  <div
+                    className={`gi-xlab-panel-${key.toLowerCase()}-chart gi-xlab-panel-chart`}
+                    ref={containerRefs[key]}
+                  ></div>
+                </div>
+              ))}
             </div>
           ) : (
             ''

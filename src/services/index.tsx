@@ -1,5 +1,7 @@
 import $i18n from '../i18n';
 import * as ElementProperties from './ElementProperties';
+import * as NeighborsQuery from './NeighborsQuery';
+import * as CommonNeighbors from './CommonNeighbors';
 import * as Search from './Search';
 import Server from './Server';
 export default {
@@ -11,6 +13,8 @@ export default {
   component: Server,
   services: {
     ...ElementProperties,
+    ...NeighborsQuery,
+    ...CommonNeighbors,
     ...Search,
   },
 };
