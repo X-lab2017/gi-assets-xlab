@@ -180,7 +180,7 @@ const XlabPathAnalysis: React.FC<IPathAnalysisProps> = props => {
     updateState(draft => {
       draft.loading = true;
     });
-    let searchResults: Object[] = [];
+    let searchResults: { label: string; value: string }[] = [];
     const promises: Promise<any>[] = ['user', 'repo'].map(async type => {
       const val = await searchService({ name: formatContent(content), isUser: type === 'user' });
       if (val.data?.result) {
