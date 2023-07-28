@@ -35,7 +35,6 @@ const registerMeta = context => {
     info.services[1],
     engineId,
   );
-  const { GIAC_CONTENT_ITEMS = [] } = context;
   return {
     searchServiceId: {
       title: $i18n.get({ id: 'gi-assets-xlab.components.Search.registerMeta.SearchService', dm: '搜索服务' }),
@@ -66,7 +65,7 @@ const registerMeta = context => {
       'x-decorator': 'FormItem',
       'x-component': 'Select',
       enum: PLACEMENT_OPTIONS,
-      default: 'LT',
+      default: 'RT',
     },
     offset: {
       title: $i18n.get({ id: 'gi-assets-xlab.components.Search.registerMeta.Offset', dm: '偏移量' }),
@@ -77,14 +76,14 @@ const registerMeta = context => {
         min: 0,
         max: 400,
       },
-      default: [0, 0],
+      default: [16, 18],
     },
     width: {
       title: $i18n.get({ id: 'gi-assets-xlab.components.Search.registerMeta.Width', dm: '宽度' }),
       type: 'string',
       'x-decorator': 'FormItem',
       'x-component': 'Input',
-      default: '100%',
+      default: 'calc(100% - 300px)',
     },
     size: {
       title: $i18n.get({ id: 'gi-assets-xlab.components.Search.registerMeta.Height', dm: '高度' }),

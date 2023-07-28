@@ -2,12 +2,12 @@ import { utils } from '@antv/gi-sdk';
 import request from 'umi-request';
 import $i18n from '../i18n';
 import { isArray } from '@antv/util';
-import { getEdgeStatement, getStatement } from './util';
+import { cypherQuery, getEdgeStatement, getStatement } from './util';
 
 export const XlabNeighborsQuery = {
   name: $i18n.get({ id: 'tugraph.src.services.NeighborsQuery.NeighborQuery', dm: 'Xlab 邻居查询' }),
   service: async params => {
-    const { ENGINE_USER_TOKEN, HTTP_SERVICE_URL, CURRENT_SUBGRAPH } = utils.getServerEngineContext();
+    const { ENGINE_USER_TOKEN, HTTP_SERVICE_URL, CURRENT_SUBGRAPH, engineServerURL } = utils.getServerEngineContext();
     const { ids, top, type } = params;
     const idArr = isArray(ids) ? ids : [ids];
 
@@ -18,20 +18,10 @@ export const XlabNeighborsQuery = {
     };
     const promises: Promise<any>[] = idArr.map(async id => {
       const stm = getStatement(type, id, top);
-      const res = await request(`${HTTP_SERVICE_URL}/api/tugraph/languagequery`, {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8',
-          Authorization: ENGINE_USER_TOKEN,
-        },
-        data: {
-          value: stm,
-          graphName: CURRENT_SUBGRAPH,
-        },
-      });
+      const graphData = await cypherQuery(engineServerURL, ENGINE_USER_TOKEN, CURRENT_SUBGRAPH, stm);
 
       // find the edge between each node in nodes and node with id
-      const { nodes = [], edges = [] } = res.data;
+      const { nodes = [], edges = [] } = graphData;
       if (edges.length) {
         nodes.forEach(pathNode => {
           if (!cacheMap[pathNode.id]) {
@@ -48,18 +38,8 @@ export const XlabNeighborsQuery = {
       } else {
         const pathPromises: Promise<any>[] = nodes?.map(async node => {
           const edgeStm = getEdgeStatement(type, id, node.id);
-          const pathRes = await request(`${HTTP_SERVICE_URL}/api/tugraph/languagequery`, {
-            method: 'post',
-            headers: {
-              'Content-Type': 'application/json;charset=utf-8',
-              Authorization: ENGINE_USER_TOKEN,
-            },
-            data: {
-              value: edgeStm,
-              graphName: CURRENT_SUBGRAPH,
-            },
-          });
-          const { nodes: pathNodes = [], edges: pathEdges = [] } = pathRes.data;
+          const pathRes = await cypherQuery(engineServerURL, ENGINE_USER_TOKEN, CURRENT_SUBGRAPH, edgeStm);
+          const { nodes: pathNodes = [], edges: pathEdges = [] } = pathRes;
           pathNodes.forEach(pathNode => {
             if (!cacheMap[pathNode.id]) {
               const { created_at } = pathNode.properties || {};
@@ -101,7 +81,7 @@ export const XlabNeighborsQuery = {
 
         await Promise.all(pathPromises);
       }
-      return res;
+      return graphData;
     });
 
     await Promise.all(promises);

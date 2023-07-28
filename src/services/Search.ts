@@ -6,19 +6,32 @@ const XlabSearch = {
   name: $i18n.get({ id: 'gi-assets-xlab.src.services.Search.FuzzySearch', dm: '模糊搜索' }),
   service: async params => {
     const { name, isUser } = params;
-    const { HTTP_SERVICE_URL, engineServerURL, ENGINE_USER_TOKEN } = utils.getServerEngineContext();
 
-    const response = await request(`${HTTP_SERVICE_URL}/api/xlab/fuzzy`, {
-      method: 'post',
-      data: {
-        name,
-        isUser,
-        engineServerURL,
+    const { engineServerURL, ENGINE_USER_TOKEN } = utils.getServerEngineContext();
+
+    const response = await request(`${engineServerURL}/db/default/xlab/fuzzy_query`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'content-type': 'application/json',
         Authorization: ENGINE_USER_TOKEN,
       },
+      body: `{"data": "{\\"name\\": \\"${name}\\", \\"is_user\\": ${isUser}}"}`,
+      timeout: 50000,
+      dataType: 'json',
     });
 
-    return response;
+    if (response.result) {
+      return {
+        success: true,
+        data: { nodes: JSON.parse(response.result) },
+      };
+    }
+
+    return {
+      success: false,
+      data: {},
+    };
   },
 };
 

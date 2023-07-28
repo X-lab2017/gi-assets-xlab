@@ -1,34 +1,46 @@
-@panel-width: 600px;
-.gi-xlab {
+.gi-xlablayout-left-container {
   position: absolute;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
-  left: 0px;
-  display: block;
-  .xlab-header {
-    top: 0px;
-    right: 0px;
-    left: 0px;
-    flex: 80px;
-    height: 80px;
-    padding: 8px;
-    line-height: 80px;
-    background: green;
+  left: 16px;
+  top: 16px;
+  z-index: 1;
+  .gi-xlablayout-left-children-wrapper {
+    background: var(--background-color);
+    border-radius: 6px;
+    color: var(--text-color);
+    width: 100%;
+    padding: 0;
+    text-align: center;
+    list-style: none;
+    box-shadow: var(--box-shadow-base);
+    display: flex;
+    .gi-xlablayout-left-icon {
+      height: 46px;
+    }
   }
-  .xlab-canvas {
-    position: absolute;
-    top: 100px;
-    right: @panel-width;
-    bottom: 0px;
-    left: 0px;
-  }
-  .xlab-properties {
-    position: absolute;
-    top: 100px;
-    right: 0px;
-    bottom: 0px;
-    width: @panel-width;
-    background: blueviolet;
-  }
+}
+.gi-xlablayout-left-component {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  z-index: 1;
+  background-color: var(--background-color);
+  box-shadow: var(--box-shadow-base);
+  padding: 16px;
+  border-radius: 8px;
+  overflow-y: scroll;
+  max-height: 75%;
+}
+.gi-xlablayout-main-canvas-container {
+  width: 100%;
+}
+.gi-xlablayout-bottom-container {
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+  width: 100%;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+.gi-xlablayout-right-container {
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
