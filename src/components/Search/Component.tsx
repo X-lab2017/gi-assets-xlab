@@ -3,7 +3,7 @@ import { Input, AutoComplete, Select } from 'antd';
 import { SearchOutlined, LoadingOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import { debounce } from '@antv/util';
-import { formatContent } from './util';
+import { formatContent } from '../util';
 import { GraphData } from '@antv/g6';
 import './index.less';
 import $i18n from '../../i18n';
@@ -25,7 +25,7 @@ const XlabSearch = props => {
   const [searchOptions, setSearchOptions] = useState<{}[]>([]);
   const [currentContent, setCurrentContent] = useState('');
 
-  const handleChanage = debounce(async content => {
+  const handleChange = debounce(async content => {
     setLoading(true);
     const val = await searchService({ name: formatContent(content), isUser: type === 'user' });
     if (val.data?.result) {
@@ -52,8 +52,7 @@ const XlabSearch = props => {
     } else {
       // add node to the origin data
       setLoading(true);
-      const schemaType = type === 'repo' ? 'github_repo' : 'github_user';
-      const statement = `MATCH (n:${schemaType} {id:${val}}) RETURN n`;
+      const statement = `MATCH (n) where id(n) = ${val} RETURN n`;
       const resultData = await queryService({
         value: statement,
         limit: 1,
@@ -72,7 +71,7 @@ const XlabSearch = props => {
 
   useEffect(() => {
     // @ts-ignore
-    handleChanage(currentContent);
+    handleChange(currentContent);
   }, [type]);
 
   const positionStyles = getPositionStyles(placement, offset);
@@ -102,7 +101,7 @@ const XlabSearch = props => {
           options={searchOptions}
           onChange={handleSelect}
           onSelect={handleSelect}
-          onSearch={handleChanage}
+          onSearch={handleChange}
         />
 
         {

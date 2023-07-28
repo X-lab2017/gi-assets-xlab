@@ -6,7 +6,7 @@ const { name } = require('./package.json');
 module.exports = (env, argv) => {
   const ENTRY_PATH = path.join(__dirname, 'src/index.tsx');
   const DIST_PATH = path.join(__dirname, 'dist/');
-  let ASSETS_UMD = name.split('-').join('_').toUpperCase();
+  let ASSETS_UMD = name.replace('@antv/', '').split('-').join('_').toUpperCase();
 
   console.log(`UMD Package name: \x1b[32m${ASSETS_UMD}\x1b[0m`);
 
