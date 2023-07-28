@@ -12,7 +12,7 @@ type ControlledValues = {
   sep: number;
 };
 export interface QueryNeighborsProps {
-  serviceId: '';
+  serviceId: string;
   contextmenu: any;
   degree: number;
   isFocus: boolean;

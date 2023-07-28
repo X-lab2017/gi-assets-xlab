@@ -8,6 +8,6 @@ const info = {
   category: 'system-interaction',
   icon: 'icon-search',
   type: 'AUTO',
-  services: [ASSET_ID, 'CypherQuery'],
+  services: [ASSET_ID, 'XlabCypherQuery'],
 };
 export default info;

@@ -1,6 +1,6 @@
 {
   "name": "@antv/gi-assets-xlab",
-  "version": "0.1.2",
+  "version": "0.1.14",
   "description": "A G6VP asset for X-lab.",
   "keywords": [
     "G6VP",
@@ -29,8 +29,8 @@
     "@antv/g2": "^5.0.16",
     "@antv/g6": "4.x",
     "@antv/gi-assets-basic": "latest",
-    "@antv/gi-assets-neo4j": "^2.0.4",
-    "@antv/gi-sdk": "latest",
+    "@antv/gi-assets-neo4j": "latest",
+    "@antv/gi-sdk": "^2.4.2",
     "@antv/gi-theme-antd": "latest",
     "@antv/graphin": "^2.7.14",
     "ahooks": "^3.7.8",
@@ -55,9 +55,6 @@
     "webpack-cli": "^5.0.1"
   },
   "authors": [],
-  "overrides": {
-    "@antv/gi-sdk": "latest"
-  },
   "publishConfig": {
     "access": "public"
   },

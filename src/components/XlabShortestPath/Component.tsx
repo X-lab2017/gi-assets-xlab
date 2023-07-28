@@ -56,7 +56,7 @@ const XlabPathAnalysis: React.FC<IPathAnalysisProps> = props => {
     loading: false,
     source: undefined,
     target: undefined,
-    searchRange: 'canvas',
+    searchRange: 'database',
   });
   const { searchOptions, loading, source, target, searchRange } = state;
 
@@ -180,7 +180,7 @@ const XlabPathAnalysis: React.FC<IPathAnalysisProps> = props => {
     updateState(draft => {
       draft.loading = true;
     });
-    let searchResults: { label: string; value: string }[] = [];
+    let searchResults: Object[] = [];
     const promises: Promise<any>[] = ['user', 'repo'].map(async type => {
       const val = await searchService({ name: formatContent(content), isUser: type === 'user' });
       if (val.data?.result) {
@@ -286,7 +286,7 @@ const XlabPathAnalysis: React.FC<IPathAnalysisProps> = props => {
       draft.loading = true;
     });
     // const statement = `MATCH (n1) WHERE id(n1) = ${formSource} with n1 MATCH (n2) WHERE id(n2) = ${formTarget} with n1, n2 CALL algo.shortestPath(n1,n2) YIELD path RETURN path`;
-    const statement = `MATCH (n1) WHERE id(n1) = ${formSource} with n1 MATCH (n2) WHERE id(n2) = ${formTarget} with n1, n2 CALL algo.allShortestPaths(n1,n2) YIELD relationshipIds RETURN relationshipIds`;
+    const statement = `MATCH (n1) WHERE id(n1) = ${formSource} with n1 MATCH (n2) WHERE id(n2) = ${formTarget} with n1, n2 CALL algo.allShortestPaths(n1,n2) YIELD relationshipIds RETURN relationshipIds LIMIT 10`;
     const resultData = await queryService({
       value: statement,
       limit: 1,
@@ -452,7 +452,7 @@ const XlabPathAnalysis: React.FC<IPathAnalysisProps> = props => {
           <Radio.Group
             size="middle"
             options={[
-              { label: '画布内', value: 'canvas' },
+              { label: '画布内', value: 'canvas', disabled: !graphData.nodes?.length },
               { label: '数据库', value: 'database' },
             ]}
             onChange={ele => {

@@ -13,7 +13,7 @@ const info = {
   cover: 'http://xxx.jpg',
   category: 'elements-interaction',
   icon: 'icon-list',
-  type: 'AUTO',
+  type: 'GIAC_CONTENT',
   services: [ASSET_ID],
 };
 export default info;

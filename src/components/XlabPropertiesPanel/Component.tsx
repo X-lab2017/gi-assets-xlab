@@ -20,8 +20,8 @@ const charts: { [key: string]: Chart | undefined } = {
 const cachedStateicData = {};
 
 const XlabPropertiesPanel = props => {
-  const { serviceId, width = '400px' } = props;
-  const { graph, services, data, config } = useContext();
+  const { serviceId } = props;
+  const { graph, services, data, config, HAS_GRAPH } = useContext();
   const service = utils.getService(services, serviceId);
   if (!service) return null;
   const [form] = Form.useForm();
@@ -70,6 +70,7 @@ const XlabPropertiesPanel = props => {
   };
 
   useEffect(() => {
+    if (!graph || graph.destroyed) return;
     graph.on('canvas:click', handleCanvasClick);
     graph.on('nodeselectchange', handleNodeSelect);
     return () => {
@@ -102,8 +103,8 @@ const XlabPropertiesPanel = props => {
         dotColorMap[id] = COLORS[i % COLORS.length];
         orderTypes.push(`${name}(${id})`);
         const val = await service({ id, nodeType: nodeType === 'github_repo' ? 'repo' : 'user' });
-        if (val.data.result) {
-          const value = (Object.values(JSON.parse(val.data.result)) as any)[0];
+        if (val.success) {
+          const value = val.data;
           const totalMap = {};
           Object.keys(DETAIL_FIELDS).forEach(fieldName => {
             const fields = DETAIL_FIELDS[fieldName];
@@ -166,6 +167,7 @@ const XlabPropertiesPanel = props => {
                   subType: key,
                   name,
                   id,
+<<<<<<< Updated upstream
                 }));
                 openrankData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
                 openrankData.sort((a, b) => orderTypes.indexOf(a.modelKey) - orderTypes.indexOf(b.modelKey));
@@ -178,6 +180,31 @@ const XlabPropertiesPanel = props => {
                   false,
                 );
               });
+=======
+                })),
+              );
+              return;
+            }
+            try {
+              const response = await fetch(`https://oss.x-lab.info/open_digger/github/${name}/${key}.json`);
+              const fetchedData = await response.json();
+              cachedStateicData[modelKey] = cachedStateicData[modelKey] || {};
+              cachedStateicData[modelKey][key] = fetchedData;
+              chartDatas[fieldName] = chartDatas[fieldName].concat(
+                Object.keys(fetchedData).map(date => ({
+                  date,
+                  count: fetchedData[date],
+                  modelKey,
+                  subType: key,
+                  name,
+                  id,
+                })),
+              );
+              return fetchedData;
+            } catch (error) {
+              console.warn(`${name} 的 ${key} 文件获取失败`);
+            }
+>>>>>>> Stashed changes
           });
         })
         .flat();
@@ -189,6 +216,7 @@ const XlabPropertiesPanel = props => {
   }, [models]);
 
   useEffect(() => {
+    if (!graph || graph.destroyed) return;
     // 更换概览图表
     const nodeTypeMap: any = {};
     const edgeTypeMap: any = {};
@@ -212,7 +240,7 @@ const XlabPropertiesPanel = props => {
       node: nodeTypeMap,
       edge: edgeTypeMap,
     });
-  }, [data]);
+  }, [data, graph]);
 
   useEffect(() => {
     if (models?.length) return;
@@ -290,9 +318,9 @@ const XlabPropertiesPanel = props => {
   }, [overviewData, models]);
 
   useEffect(() => {
-    if (models?.length) return;
+    if (models?.length || !graph || graph.destroyed) return;
     renderRankingChart();
-  }, [overviewData, models, rankingType, rankingDimension]);
+  }, [overviewData, models, rankingType, rankingDimension, graph]);
 
   const handleNodeSelect = e => {
     const { selectedItems, select } = e;
@@ -348,9 +376,9 @@ const XlabPropertiesPanel = props => {
     setLoading(true);
     setRankingDimension(rankingDimension);
     const nodes = getTypeNodes(graph, [rankingType]).map(node => node.getModel());
-    let data: any = [];
+    let rankingData: any = [];
     if (rankingDimension === 'Star' || rankingDimension === 'Commits') {
-      data = nodes.map(node => {
+      rankingData = nodes.map(node => {
         const { id, name, star, commits } = node;
         return {
           key: `${name}(${id})`,
@@ -368,38 +396,51 @@ const XlabPropertiesPanel = props => {
           const dateKey = `${currentDate.getFullYear()}-${monthStr.length < 2 ? 0 : ''}${monthStr}`;
 
           const nodeKey = `${name}(${id})`;
+<<<<<<< Updated upstream
           if (cachedStateicData[nodeKey]?.[rankingDimension]) {
             data.push({
+=======
+          if (cachedStateicData[nodeKey]?.hasOwnProperty(rankingDimension)) {
+            if (!cachedStateicData[nodeKey][rankingDimension]) return;
+            rankingData.push({
+>>>>>>> Stashed changes
               key: nodeKey,
               dataId: id,
               ranking: cachedStateicData[nodeKey][rankingDimension][dateKey],
             });
             return;
           }
-          return await fetch(`https://oss.x-lab.info/open_digger/github/${name}/${rankingDimension.toLowerCase()}.json`)
-            .then(response => {
-              if (!response.ok) return;
-              return response.json();
-            })
-            .then(rankData => {
-              cachedStateicData[nodeKey] = cachedStateicData[nodeKey] || {};
-              cachedStateicData[nodeKey][rankingDimension] = rankData;
-              if (!rankData) {
-                data.push({
-                  key: nodeKey,
-                  dataId: id,
-                  ranking: 0,
-                });
-                return;
-              }
-              if (rankData[dateKey] !== undefined) {
-                data.push({
-                  key: nodeKey,
-                  dataId: id,
-                  ranking: rankData[dateKey],
-                });
-              }
-            });
+          try {
+            const res = await fetch(
+              `https://oss.x-lab.info/open_digger/github/${name}/${rankingDimension.toLowerCase()}.json`,
+            )
+              .then(response => {
+                if (!response.ok) return;
+                return response.json();
+              })
+              .then(rankData => {
+                cachedStateicData[nodeKey] = cachedStateicData[nodeKey] || {};
+                cachedStateicData[nodeKey][rankingDimension] = rankData;
+                if (!rankData) {
+                  rankingData.push({
+                    key: nodeKey,
+                    dataId: id,
+                    ranking: 0,
+                  });
+                  return;
+                }
+                if (rankData[dateKey] !== undefined) {
+                  rankingData.push({
+                    key: nodeKey,
+                    dataId: id,
+                    ranking: rankData[dateKey],
+                  });
+                }
+              });
+            return res;
+          } catch (error) {
+            console.warn(`${name} 的 ${rankingDimension} 文件获取失败`);
+          }
         })
         .filter(Boolean);
       await Promise.all(promises);
@@ -410,34 +451,44 @@ const XlabPropertiesPanel = props => {
     let max = -Infinity;
     const NODE_VISUAL_RANGE = [16, 64];
     const nodeVisualRange = NODE_VISUAL_RANGE[1] - NODE_VISUAL_RANGE[0];
-    data.forEach(item => {
+    rankingData.forEach(item => {
       if (item.ranking < min) min = item.ranking;
       if (item.ranking > max) max = item.ranking;
     });
     const nodeValueRange = max - min;
-    data.forEach(item => {
-      const { ranking, dataId } = item;
-      const size = ((ranking - min) / nodeValueRange) * nodeVisualRange + NODE_VISUAL_RANGE[0];
-      const node = graph.findById(dataId);
-      if (!node) return;
-      const { size: modelSize, style } = node.getModel();
-      graph.updateItem(dataId, {
-        size,
-        oriSize: modelSize || style?.keyshape.size || 30,
-        // 兼容 graphin-circle
-        style: {
-          keyshape: {
-            size,
+    if (max !== Infinity && nodeValueRange) {
+      rankingData.forEach(item => {
+        const { ranking, dataId } = item;
+        const size = ((ranking - min) / nodeValueRange) * nodeVisualRange + NODE_VISUAL_RANGE[0];
+        const node = graph.findById(dataId);
+        if (!node) return;
+        const { size: modelSize, style } = node.getModel();
+        graph.updateItem(dataId, {
+          size,
+          oriSize: modelSize || style?.keyshape.size || 30,
+          // 兼容 graphin-circle
+          style: {
+            keyshape: {
+              size,
+            },
+            icon: {
+              size: size / 2,
+            },
           },
-          icon: {
-            size: size / 2,
-          },
-        },
+        });
       });
-    });
+    }
 
     destroyChart('Ranking', containerRefs.Ranking);
-    charts.Ranking = createTransposeIntervalChart(data, containerRefs.Ranking.current, graph);
+    if (rankingData?.length) {
+      charts.Ranking = createTransposeIntervalChart(rankingData, containerRefs.Ranking.current, graph);
+    }
+    setChartsReady(old => {
+      return {
+        ...old,
+        Ranking: !!rankingData?.length,
+      };
+    });
     setLoading(false);
   };
 
@@ -457,22 +508,11 @@ const XlabPropertiesPanel = props => {
               })}
             </h3>
             <Divider className="gi-xlab-panel-overview-divider" type="horizontal" />
-            <div
-              style={!data.nodes.length ? { visibility: 'hidden', height: 0 } : {}}
-              className="gi-xlab-panel-overview-chart"
-              ref={overviewRefs.nodeType}
-            />
-            <div
-              style={!data.edges.length ? { visibility: 'hidden', height: 0 } : {}}
-              className="gi-xlab-panel-overview-chart"
-              ref={overviewRefs.edgeType}
-            />
+
             <div
               className="gi-xlab-panel-ranking-wrapper"
-              style={!hasRepoUserNode ? { visibility: 'hidden', height: 0 } : {}}
+              style={chartsReady['Ranking'] ? {} : { visibility: 'hidden', height: 0 }}
             >
-              <Divider className="gi-xlab-panel-overview-divider" type="horizontal" />
-              <h4 className="gi-xlab-panel-ranking-title">排行榜</h4>
               <div className="gi-xlab-panel-ranking-dimension">
                 <Radio.Group
                   size="middle"
@@ -508,7 +548,19 @@ const XlabPropertiesPanel = props => {
                 </Form.Item>
               </div>
               <div className="gi-xlab-panel-overview-chart" ref={containerRefs.Ranking}></div>
+              <Divider className="gi-xlab-panel-overview-divider" type="horizontal" />
             </div>
+
+            <div
+              style={!data.nodes.length ? { visibility: 'hidden', height: 0 } : {}}
+              className="gi-xlab-panel-overview-chart"
+              ref={overviewRefs.nodeType}
+            />
+            <div
+              style={!data.edges.length ? { visibility: 'hidden', height: 0 } : {}}
+              className="gi-xlab-panel-overview-chart"
+              ref={overviewRefs.edgeType}
+            />
           </>
         ) : (
           <Empty
@@ -522,7 +574,7 @@ const XlabPropertiesPanel = props => {
         )}
       </Form>
     );
-  }, [models, data, rankingType]);
+  }, [models, data, rankingType, chartsReady]);
 
   const destroyChart = (key, ref) => {
     if (!charts[key]) return;
@@ -557,10 +609,7 @@ const XlabPropertiesPanel = props => {
   const hasNoCharts = useMemo(() => totals && !Object.values(totals).find(num => num !== 0), [totals]);
 
   return (
-    <div
-      className="gi-xlab-panel"
-      style={{ position: 'absolute', bottom: '0px', right: '0px', height: 'calc(100% - 38px)', width }}
-    >
+    <div className="gi-xlab-panel">
       {models.length ? (
         <>
           <div className="gi-xlab-panel-detail-wrapper">

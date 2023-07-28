@@ -3,7 +3,10 @@ import * as ElementProperties from './ElementProperties';
 import * as NeighborsQuery from './NeighborsQuery';
 import * as CommonNeighbors from './CommonNeighbors';
 import * as Search from './Search';
+import * as CypherQuery from './CypherQuery';
+import * as Login from './Login';
 import Server from './Server';
+
 export default {
   id: 'GI',
   type: 'api',
@@ -16,5 +19,7 @@ export default {
     ...NeighborsQuery,
     ...CommonNeighbors,
     ...Search,
+    ...CypherQuery,
+    ...Login,
   },
 };

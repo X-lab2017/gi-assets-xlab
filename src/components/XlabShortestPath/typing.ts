@@ -13,7 +13,7 @@ export interface IState {
   isAnalysis: boolean;
   filterRule: IFilterRule;
   selecting: string;
-  searchOptions: { label: string; value: string }[];
+  searchOptions: Object[];
   loading: boolean;
   source: string | undefined;
   target: string | undefined;
