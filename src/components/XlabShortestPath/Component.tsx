@@ -1,6 +1,20 @@
 import { CaretRightOutlined, DeleteOutlined, FormOutlined } from '@ant-design/icons';
 import { useContext, utils } from '@antv/gi-sdk';
-import { Button, Col, Collapse, Empty, Form, Row, Radio, Space, Switch, Timeline, message, Select } from 'antd';
+import {
+  Button,
+  Col,
+  Collapse,
+  Empty,
+  Form,
+  Row,
+  Radio,
+  Space,
+  Switch,
+  Timeline,
+  message,
+  Select,
+  InputNumber,
+} from 'antd';
 import { enableMapSet } from 'immer';
 import React, { useEffect, useRef, ReactNode } from 'react';
 import { useImmer } from 'use-immer';
@@ -24,22 +38,34 @@ export interface IPathAnalysisProps {
     source: string;
     target: string;
     direction: string;
+    length: number;
   };
   searchServiceId?: string;
-  cypherServiceId?: string;
+  shortestPathServiceId?: string;
+  queryNodesServiceId?: string;
   onOpen: () => void;
 }
 
 enableMapSet();
 
+const idCache = {};
+
 const XlabPathAnalysis: React.FC<IPathAnalysisProps> = props => {
-  const { pathNodeLabel, controlledValues, searchServiceId, cypherServiceId, onOpen = () => {} } = props;
+  const {
+    pathNodeLabel,
+    controlledValues,
+    searchServiceId,
+    shortestPathServiceId,
+    queryNodesServiceId,
+    onOpen = () => {},
+  } = props;
   const { data: graphData, graph, sourceDataMap, updateHistory, services, updateData } = useContext();
 
   // fuzzy search service
   const searchService = utils.getService(services, searchServiceId);
-  const queryService = utils.getService(services, cypherServiceId);
-  if (!searchService || !queryService) return null;
+  const shortestPathService = utils.getService(services, shortestPathServiceId);
+  const queryNodesService = utils.getService(services, queryNodesServiceId);
+  if (!searchService || !shortestPathService) return null;
 
   const [state, updateState] = useImmer<IState>({
     allNodePath: [],
@@ -90,7 +116,7 @@ const XlabPathAnalysis: React.FC<IPathAnalysisProps> = props => {
   const handleSearch = () => {
     form.validateFields().then(values => {
       cancelHighlight();
-      const { source: formSource, target: formTarget, direction = false } = values;
+      const { source: formSource, target: formTarget, direction = false, length = 0 } = values;
       const history = {
         componentId: 'PathAnalysis',
         type: 'analyse',
@@ -100,19 +126,19 @@ const XlabPathAnalysis: React.FC<IPathAnalysisProps> = props => {
             id: 'basic.components.PathAnalysis.Component.StartPointSourceEndPoint',
             dm: '起点: {source}, 终点: {target}',
           },
-          { source: formSource, target: formTarget },
+          { source: idCache[formSource], target: idCache[formTarget] },
         ),
         params: {
-          source: formSource,
-          target: formTarget,
+          source: idCache[formSource],
+          target: idCache[formTarget],
           direction: String(direction),
         },
       };
       try {
         if (searchRange === 'canvas') {
-          doSearchInCanvas(formSource, formTarget, direction);
+          doSearchInCanvas(idCache[formSource], idCache[formTarget], direction);
         } else {
-          doSearchInDatabase(formSource, formTarget, direction);
+          doSearchInDatabase(idCache[formSource], idCache[formTarget], direction, length);
         }
         // 更新到历史记录
         updateHistory({
@@ -171,7 +197,9 @@ const XlabPathAnalysis: React.FC<IPathAnalysisProps> = props => {
       });
       const { item } = e;
       if (!item || item.destroyed) return;
-      form.setFieldsValue({ [type]: item.getID() });
+      const name = item.getModel().name;
+      idCache[name] = item.getID();
+      form.setFieldsValue({ [type]: name });
     };
     graph.once('node:click', nodeClickListener);
   };
@@ -183,13 +211,14 @@ const XlabPathAnalysis: React.FC<IPathAnalysisProps> = props => {
     let searchResults: Object[] = [];
     const promises: Promise<any>[] = ['user', 'repo'].map(async type => {
       const val = await searchService({ name: formatContent(content), isUser: type === 'user' });
-      if (val.data?.result) {
-        const nodes = JSON.parse(val.data.result);
-        if (nodes && nodes.ok !== false) {
+      if (val.success) {
+        const { nodes } = val.data;
+        if (nodes) {
           searchResults = searchResults.concat(
-            Object.keys(nodes).map(id => ({
-              value: id,
-              label: `${nodes[id]}(${id})`,
+            nodes.map(({ name, id }) => ({
+              value: name,
+              id,
+              label: `${name}(${id})`,
             })) || [],
           );
         }
@@ -207,22 +236,20 @@ const XlabPathAnalysis: React.FC<IPathAnalysisProps> = props => {
     async (val, option, type = 'source') => {
       if (!option?.value) return;
       // find same node on the graph first
-      const graphNodes = graph.getNodes().filter(node => (node.getModel() as any).properties.id?.toString() === val);
+      const graphNodes = graph.getNodes().filter(node => (node.getModel() as any).getID?.() === option.id);
       if (graphNodes.length) {
+        idCache[val] = graphNodes[0].getID();
         graph.focusItems(graphNodes);
       } else {
-        // add node to the origin data
+        // // add node to the origin data
         updateState(draft => {
           draft.loading = true;
         });
-        const statement = `MATCH (n) where id(n) = ${val} RETURN n`;
-        const resultData = await queryService({
-          value: statement,
-          limit: 1,
-        });
-        if (resultData.nodes?.length) {
+        const resultData = await queryNodesService?.({ ids: [option.id] });
+        if (resultData?.length) {
+          idCache[val] = option.id;
           updateState(draft => {
-            draft[type] = resultData.nodes[0].id;
+            draft[type] = resultData[0].id;
           });
         }
         updateState(draft => {
@@ -281,46 +308,55 @@ const XlabPathAnalysis: React.FC<IPathAnalysisProps> = props => {
     });
   };
 
-  const doSearchInDatabase = async (formSource, formTarget, direction) => {
+  const doSearchInDatabase = async (formSource, formTarget, direction, length = 0) => {
     updateState(draft => {
       draft.loading = true;
     });
     // const statement = `MATCH (n1) WHERE id(n1) = ${formSource} with n1 MATCH (n2) WHERE id(n2) = ${formTarget} with n1, n2 CALL algo.shortestPath(n1,n2) YIELD path RETURN path`;
-    const statement = `MATCH (n1) WHERE id(n1) = ${formSource} with n1 MATCH (n2) WHERE id(n2) = ${formTarget} with n1, n2 CALL algo.allShortestPaths(n1,n2) YIELD relationshipIds RETURN relationshipIds LIMIT 10`;
-    const resultData = await queryService({
-      value: statement,
-      limit: 1,
-    });
-    const { nodes, edges, paths } = resultData;
-    if (nodes?.length) {
-      const graphData = graph.save() as GraphData;
-      const newNodes = [...(graphData.nodes || []), ...nodes];
-      const newEdges = [...(graphData.edges || []), ...edges];
-      updateData({
-        ...graphData,
-        nodes: newNodes,
-        edges: newEdges,
+    try {
+      const resultData = await shortestPathService({
+        id1: formSource,
+        id2: formTarget,
+        length,
       });
-      const allNodePath: string[][] = [];
-      const allEdgePath: string[][] = [];
-      paths?.forEach(path => {
-        allNodePath.push(path.nodes.map(nodeId => String(nodeId)));
-        allEdgePath.push(path.edges);
-      });
-      updateState(draft => {
-        draft.allNodePath = allNodePath;
-        draft.allEdgePath = allEdgePath;
-        draft.nodePath = allNodePath;
-        draft.edgePath = allEdgePath;
-        draft.isAnalysis = true;
-        draft.highlightPath = new Set<number>(allNodePath.map((_, index) => index));
-        draft.filterRule = {
-          type: 'All-Path',
-        };
-        draft.selecting = '';
-      });
-    } else {
-      message.info('该起点和终点之间不存在路径');
+      const { nodes, edges, paths } = resultData;
+      if (nodes?.length) {
+        const graphData = graph.save() as GraphData;
+        const newNodes = [...(graphData.nodes || []), ...nodes];
+        const newEdges = [...(graphData.edges || []), ...edges];
+        updateData({
+          ...graphData,
+          nodes: newNodes,
+          edges: newEdges,
+        });
+        const allNodePath: string[][] = [];
+        const allEdgePath: string[][] = [];
+        paths?.forEach(path => {
+          allNodePath.push(path.nodes.map(nodeId => String(nodeId)));
+          allEdgePath.push(path.edges);
+        });
+        updateState(draft => {
+          draft.allNodePath = allNodePath;
+          draft.allEdgePath = allEdgePath;
+          draft.nodePath = allNodePath;
+          draft.edgePath = allEdgePath;
+          draft.isAnalysis = true;
+          draft.highlightPath = new Set<number>(allNodePath.map((_, index) => index));
+          draft.filterRule = {
+            type: 'All-Path',
+          };
+          draft.selecting = '';
+        });
+      } else {
+        message.info('该起点和终点之间不存在路径');
+      }
+    } catch (error: any) {
+      const errorMsg = error.toString();
+      if (errorMsg.includes('timeout')) {
+        message.error('查询最短路径失败，查询超时');
+      } else {
+        message.error(`查询最短路径失败，错误信息：${errorMsg}`);
+      }
     }
     updateState(draft => {
       draft.loading = false;
@@ -385,7 +421,7 @@ const XlabPathAnalysis: React.FC<IPathAnalysisProps> = props => {
     if (state.filterRule.type === 'Shortest-Path') {
       const pathLenMap = {};
       let minLen = Infinity;
-      state.allEdgePath.forEach((path, pathId) => {
+      state.allEdgePath?.forEach((path, pathId) => {
         const len = state.filterRule.weightPropertyName
           ? getPathByWeight(path, state.filterRule.weightPropertyName, sourceDataMap)
           : path.length;
@@ -394,10 +430,10 @@ const XlabPathAnalysis: React.FC<IPathAnalysisProps> = props => {
       });
 
       nodePath = state.allNodePath.filter((_, pathId) => pathLenMap[pathId] === minLen);
-      edgePath = state.allEdgePath.filter((_, pathId) => pathLenMap[pathId] === minLen);
+      edgePath = state.allEdgePath?.filter((_, pathId) => pathLenMap[pathId] === minLen);
     } else if (state.filterRule.type === 'Edge-Type-Filter' && state.filterRule.edgeType) {
       const validPathId = new Set();
-      state.allEdgePath.forEach((path, pathId) => {
+      state.allEdgePath?.forEach((path, pathId) => {
         const isMatch = path.every(edgeId => {
           const edgeConfig = sourceDataMap.edges[edgeId];
           return edgeConfig?.edgeType === state.filterRule.edgeType;
@@ -407,7 +443,7 @@ const XlabPathAnalysis: React.FC<IPathAnalysisProps> = props => {
         }
       });
       nodePath = state.allNodePath.filter((_, pathId) => validPathId.has(pathId));
-      edgePath = state.allEdgePath.filter((_, pathId) => validPathId.has(pathId));
+      edgePath = state.allEdgePath?.filter((_, pathId) => validPathId.has(pathId));
     } else {
       nodePath = state.allNodePath;
       edgePath = state.allEdgePath;
@@ -421,7 +457,7 @@ const XlabPathAnalysis: React.FC<IPathAnalysisProps> = props => {
   }, [state.allNodePath, state.allEdgePath, state.filterRule]);
 
   useEffect(() => {
-    handleResetForm();
+    cancelHighlight();
   }, [graphData]);
 
   /**
@@ -430,12 +466,13 @@ const XlabPathAnalysis: React.FC<IPathAnalysisProps> = props => {
    */
   useEffect(() => {
     if (controlledValues) {
-      const { source, target, direction } = controlledValues;
+      const { source, target, direction, length } = controlledValues;
       onOpen();
       form.setFieldsValue({
         source,
         target,
         direction: direction !== 'false',
+        length,
       });
       handleSearch();
     }
@@ -524,6 +561,7 @@ const XlabPathAnalysis: React.FC<IPathAnalysisProps> = props => {
             <FormOutlined
               style={{ cursor: 'pointer', color: state.selecting === 'source' ? '#1890ff' : 'rgba(0, 0, 0, 0.65)' }}
               onClick={() => beginSelect('source')}
+              rev={undefined}
             />
           </Col>
         </Row>
@@ -587,9 +625,28 @@ const XlabPathAnalysis: React.FC<IPathAnalysisProps> = props => {
             <FormOutlined
               style={{ cursor: 'pointer', color: state.selecting === 'target' ? '#1890ff' : 'rgba(0, 0, 0, 0.65)' }}
               onClick={() => beginSelect('target')}
+              rev={undefined}
             />
           </Col>
         </Row>
+        {searchRange === 'database' ? (
+          <Row className="gi-path-analysis-path-length">
+            <Form.Item name="length" label="路径长度" initialValue={0}>
+              <InputNumber
+                min={0}
+                max={5}
+                step={1}
+                onChange={val => {
+                  form.setFieldsValue({ length: val });
+                }}
+              />
+              <p style={{ color: 'var(--disabled-color)', fontSize: 10 }}>长度为 0 代表搜索最短路径</p>
+            </Form.Item>
+          </Row>
+        ) : (
+          ''
+        )}
+
         {/* <Form.Item
           name="direction"
           label={$i18n.get({ id: 'basic.components.PathAnalysis.Component.IsThereAnyDirection', dm: '是否有向' })}
@@ -613,7 +670,7 @@ const XlabPathAnalysis: React.FC<IPathAnalysisProps> = props => {
                   <FilterRule state={state} updateState={updateState} />
                 )}
 
-                <Button danger onClick={handleResetForm} icon={<DeleteOutlined />}></Button>
+                <Button danger onClick={handleResetForm} icon={<DeleteOutlined rev={undefined} />}></Button>
               </Space>
             </Col>
           </Row>
@@ -625,7 +682,7 @@ const XlabPathAnalysis: React.FC<IPathAnalysisProps> = props => {
             defaultActiveKey={0}
             ghost={true}
             className="gi-collapse-container"
-            expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+            expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} rev={'x'} />}
           >
             {state.nodePath.map((path, index) => {
               return (

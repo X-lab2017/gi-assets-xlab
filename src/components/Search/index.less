@@ -1,9 +1,10 @@
 .gi-xlabsearch-wrapper-first {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  position: absolute;
-  left: 0;
-  top: 0;
+  overflow-y: hidden;
   text-align: center;
   background-color: var(--primary-color-opacity-1);
   backdrop-filter: blur(10px);
@@ -14,9 +15,10 @@
 }
 
 .gi-xlabsearch-wrapper {
-  box-shadow: var(--box-shadow-base);
   background: var(--background-color);
   border-radius: 6px;
+  box-shadow: var(--box-shadow-base);
+  display: inline-flex;
 }
 
 .gi-xlabsearch-history {
@@ -31,19 +33,28 @@
 
 .gi-xlabsearch-searchbar {
   text-align: left;
-  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  // transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  .gi-xlabsearch-searchbar-title {
+    margin-bottom: 10px;
+    color: var(--text-color);
+  }
 }
 
 .gi-xlabsearch-type-select {
   > :first-child {
+    color: rgba(255, 255, 255, 0.85);
+    background-color: var(--primary-color) !important;
     border-top-left-radius: 6px !important;
     border-bottom-left-radius: 6px !important;
   }
+  > :last-child {
+    color: rgba(255, 255, 255, 0.85) !important;
+  }
 }
 .gi-xlabsearch-icon {
+  color: var(--disabled-color);
   line-height: 32px;
   text-align: center;
-  color: var(--disabled-color);
   background-color: var(--background-color);
   border: 1px solid var(--border-color);
   border-top-right-radius: 6px !important;
@@ -54,7 +65,9 @@
   width: 100%;
   height: 0px;
   text-align: center;
-  transform: translateY(calc(50% - 30px));
+  position: absolute;
+  transform: translateY(10px);
+  z-index: 10;
   svg {
     width: 20px;
     height: 20px;
@@ -62,5 +75,38 @@
 }
 
 .gi-xlabsearch-loading-first {
-  transform: translateY(calc(50% - 10px));
+  z-index: 10;
+  transform: translateY(calc(50% - 100px));
+}
+
+.gi-xlabsearch-template-wrapper {
+  margin: 40px 12px 30px 12px;
+  .gi-xlabsearch-template-card {
+    margin: 0 12px;
+    padding: 16px 16px;
+    background-color: #f0f5ff;
+    border-radius: 16px;
+    box-shadow: 0 3px 6px -4px #0000001f, 0 6px 16px #00000014, 0 9px 28px 8px #0000000d;
+    .ant-divider {
+      margin: 12px 0;
+    }
+    .gi-xlabsearch-template-label {
+      font-size: 12px;
+    }
+  }
+  .gi-xlabsearch-template-title {
+    color: var(--text-color);
+  }
+  .gi-xlabsearch-template-demos {
+    margin-top: 12px;
+    text-align: left;
+    .gi-xlabsearch-demo-tag {
+      cursor: pointer;
+    }
+  }
+  .gi-xlabsearch-template-custom {
+    margin-top: 16px;
+    line-height: 32px;
+    text-align: left;
+  }
 }

@@ -9,22 +9,20 @@ const XlabSearch = {
 
     const { engineServerURL, ENGINE_USER_TOKEN } = utils.getServerEngineContext();
 
-    const response = await request(`${engineServerURL}/db/default/xlab/fuzzy_query`, {
-      method: 'POST',
+    const response = await request(`${engineServerURL}/api/${isUser ? 'search_user' : 'search_repo'}?keyword=${name}`, {
+      method: 'GET',
       headers: {
         Accept: 'application/json',
         'content-type': 'application/json',
-        Authorization: ENGINE_USER_TOKEN,
       },
-      body: `{"data": "{\\"name\\": \\"${name}\\", \\"is_user\\": ${isUser}}"}`,
       timeout: 50000,
       dataType: 'json',
     });
 
-    if (response.result) {
+    if (response) {
       return {
         success: true,
-        data: { nodes: JSON.parse(response.result) },
+        data: { nodes: response },
       };
     }
 

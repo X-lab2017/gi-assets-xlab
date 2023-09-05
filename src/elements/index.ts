@@ -1,2 +1,2 @@
-import ClusterNode from './ClusterNode';
-export { ClusterNode };
+import UserNode from './UserNode';
+export { UserNode };

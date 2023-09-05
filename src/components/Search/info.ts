@@ -8,6 +8,6 @@ const info = {
   category: 'system-interaction',
   icon: 'icon-search',
   type: 'AUTO',
-  services: [ASSET_ID, 'XlabCypherQuery'],
+  services: [ASSET_ID, 'XlabQueryNodes', 'XlabCommonNeighbors', 'XlabNeighborsQuery', 'XlabGetID', 'XlabSubNetwork'],
 };
 export default info;

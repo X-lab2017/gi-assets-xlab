@@ -14,6 +14,6 @@ const info = {
   category: 'elements-interaction',
   icon: 'icon-list',
   type: 'GIAC_CONTENT',
-  services: [ASSET_ID],
+  services: ['XlabProperties', 'XlabSchema', 'XlabCountQuery'],
 };
 export default info;

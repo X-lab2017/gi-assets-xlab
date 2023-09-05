@@ -21,8 +21,6 @@ const XlabLogin = {
       dataType: 'json',
     });
 
-    console.log('response', response);
-
     if (response.jwt) {
       return {
         success: true,

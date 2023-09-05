@@ -99,7 +99,7 @@ const FilterRuleContent: React.FC<IFilterRuleContentProps> = props => {
 };
 
 export const FilterRule = props => {
-  const { children, state, updateState } = props;
+  const { state, updateState } = props;
   return (
     <Popover
       trigger="click"
@@ -107,7 +107,7 @@ export const FilterRule = props => {
       placement="right"
       content={<FilterRuleContent state={state} updateState={updateState} />}
     >
-      <Button type="primary" icon={<FilterOutlined />}></Button>
+      <Button type="primary" icon={<FilterOutlined rev={undefined} />}></Button>
     </Popover>
   );
 };

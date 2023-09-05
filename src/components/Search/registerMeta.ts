@@ -30,9 +30,26 @@ const PLACEMENT_OPTIONS = [
 const registerMeta = context => {
   const { services, engineId } = context;
   const { options, defaultValue } = utils.getServiceOptionsByEngineId(services, info.services[0], engineId);
-  const { options: cypherOptions, defaultValue: cypherDefaultValue } = utils.getServiceOptionsByEngineId(
+  const { options: queryNodesOptions, defaultValue: queryNodesDefaultValue } = utils.getServiceOptionsByEngineId(
     services,
     info.services[1],
+    engineId,
+  );
+  const { options: commonNeighborOptions, defaultValue: commonNeighborDefaultValue } =
+    utils.getServiceOptionsByEngineId(services, info.services[2], engineId);
+  const { options: neighborOptions, defaultValue: neighborDefaultValue } = utils.getServiceOptionsByEngineId(
+    services,
+    info.services[3],
+    engineId,
+  );
+  const { options: getIdOptions, defaultValue: getIdDefaultValue } = utils.getServiceOptionsByEngineId(
+    services,
+    info.services[4],
+    engineId,
+  );
+  const { options: getSubGraphOptions, defaultValue: GetSubGraphDefaultValue } = utils.getServiceOptionsByEngineId(
+    services,
+    info.services[4],
     engineId,
   );
   return {
@@ -46,18 +63,55 @@ const registerMeta = context => {
       },
       default: defaultValue,
     },
-    cypherServiceId: {
-      title: $i18n.get({
-        id: 'gi-assets-xlab.components.Search.registerMeta.CypherQueryService',
-        dm: 'Cypher 查询服务',
-      }),
+    queryNodesServiceId: {
+      title: '批量查询节点服务',
       type: 'string',
       'x-decorator': 'FormItem',
       'x-component': 'Select',
       'x-component-props': {
-        options: cypherOptions,
+        options: queryNodesOptions,
       },
-      default: cypherDefaultValue,
+      default: queryNodesDefaultValue,
+    },
+    commonNeighborsServiceId: {
+      title: $i18n.get({ id: 'basic.components.NeighborsQuery.registerMeta.DataService', dm: '共同邻居数据服务' }),
+      type: 'string',
+      'x-decorator': 'FormItem',
+      'x-component': 'Select',
+      default: commonNeighborDefaultValue,
+      'x-component-props': {
+        options: commonNeighborOptions,
+      },
+    },
+    neighborsServiceId: {
+      title: $i18n.get({ id: 'basic.components.NeighborsQuery.registerMeta.DataService', dm: '查询邻居服务' }),
+      type: 'string',
+      'x-decorator': 'FormItem',
+      'x-component': 'Select',
+      default: neighborDefaultValue,
+      'x-component-props': {
+        options: neighborOptions,
+      },
+    },
+    getIdByNameServiceId: {
+      title: $i18n.get({ id: 'basic.components.NeighborsQuery.registerMeta.DataService', dm: '查询 ID 服务' }),
+      type: 'string',
+      'x-decorator': 'FormItem',
+      'x-component': 'Select',
+      default: getIdDefaultValue,
+      'x-component-props': {
+        options: getIdOptions,
+      },
+    },
+    getSubGraphServiceId: {
+      title: $i18n.get({ id: 'basic.components.NeighborsQuery.registerMeta.DataService', dm: '查询子图服务' }),
+      type: 'string',
+      'x-decorator': 'FormItem',
+      'x-component': 'Select',
+      default: GetSubGraphDefaultValue,
+      'x-component-props': {
+        options: getSubGraphOptions,
+      },
     },
     placement: {
       title: $i18n.get({ id: 'gi-assets-xlab.components.Search.registerMeta.ComponentLocation', dm: '组件位置' }),

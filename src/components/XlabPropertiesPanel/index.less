@@ -1,10 +1,9 @@
 .gi-xlab-panel {
   width: 100%;
   padding: 16px;
-  overflow-y: scroll;
   .gi-xlab-panel-detail-wrapper {
-    width: 100%;
     display: inline-flex;
+    width: 100%;
     overflow-x: scroll;
     .gi-xlab-panel-detail-multi {
       &:hover {
@@ -13,43 +12,49 @@
       }
     }
     .gi-xlab-panel-detail-multi {
-      max-width: 250px;
       min-width: 150px;
+      max-width: 250px;
     }
     .gi-xlab-panel-detail-one {
       width: 100%;
+      padding: 0 6px;
       border: 1px solid var(--background-color);
       border-right: 1px solid var(--border-color);
-      padding: 0 6px;
       .gi-xlab-panel-detail-properties-wrapper {
         max-height: 200px;
         overflow-y: scroll;
       }
+      .gi-xlab-panel-detail-title {
+        width: 80%;
+        max-width: 50px;
+        margin-top: 4px;
+        margin-bottom: 4px;
+      }
       .gi-xlab-panel-detail-item {
         width: 100%;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        margin-bottom: 4px;
         overflow: hidden;
         font-size: 10px;
-        margin-bottom: 4px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
         .gi-xlab-panel-detail-title {
-          font-size: 20px;
           font-weight: 700;
-          line-height: 16px;
+          font-size: 20px;
           font-size: 14px;
+          line-height: 16px;
         }
         .gi-xlab-panel-detail-title-disabled {
           color: var(--text-color);
-          cursor: not-allowed;
           text-decoration: none;
+          cursor: not-allowed;
           pointer-events: none;
         }
         .gi-xlab-panel-detail-color-dot {
+          display: inline-flex;
           width: 12px;
           height: 12px;
-          border-radius: 50%;
-          display: inline-flex;
           margin-right: 4px;
+          border-radius: 50%;
           transform: translateY(1px);
         }
       }
@@ -59,8 +64,8 @@
     }
   }
   .gi-xlab-panel-chart-wrapper {
-    text-align: center;
     padding: 16px 0;
+    text-align: center;
     border-top: 1px solid var(--border-color);
     .gi-xlab-panel-chart-container {
       margin-bottom: 16px;
@@ -68,8 +73,8 @@
         margin-bottom: 0;
       }
       .gi-xlab-panel-chart {
-        height: 130px;
         width: 100%;
+        height: 130px;
       }
     }
   }
@@ -77,18 +82,39 @@
     width: 100%;
     text-align: center;
     .gi-xlab-panel-empty {
-      color: rgba(0, 0, 0, 0.25);
       margin-top: 20%;
-      margin-left: 16px;
       margin-right: 16px;
+      margin-left: 16px;
+      color: rgba(0, 0, 0, 0.25);
     }
     .gi-xlab-panel-overview-divider {
       margin-top: 8px;
       margin-bottom: 8px;
     }
     .gi-xlab-panel-overview-chart {
-      height: 220px;
       width: 100%;
+      height: 200px;
     }
+    .gi-xlab-panel-schema-graph {
+      width: 100%;
+      height: 350px;
+    }
+  }
+  .gi-xlab-schema-graph-tooltip {
+    width: fit-content;
+    padding: 4px;
+    background-color: var(--background-color);
+  }
+  .gi-xlab-panel-total-count {
+    color: var(--disabled-color);
+    font-size: 10px;
+    text-align: left;
+    display: inline-flex;
+    .gi-xlab-panel-total-count-divider {
+      height: 22px;
+    }
+  }
+  .gi-xlab-panel-ranking-dimension {
+    margin-bottom: 0px;
   }
 }
