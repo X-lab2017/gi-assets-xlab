@@ -9,7 +9,6 @@ const GI_SERVICE_INTIAL_GRAPH = {
   res: ``,
   service: async (): Promise<GIGraphData> => {
     const context = getServerEngineContext();
-    console.log('context', context);
     const { initialQuery } = context;
     if (initialQuery === '') {
       return {

@@ -145,7 +145,7 @@ const XlabQueryNeighbors: React.FunctionComponent<QueryNeighborsProps> = props =
 
   useEffect(() => {
     //@ts-ignore
-    const handleCallback = () => {
+    const handleDataChange = () => {
       const { expandIds, expandStartId } = currentRef.current;
       if (expandIds.length === 0) {
         return;
@@ -161,10 +161,16 @@ const XlabQueryNeighbors: React.FunctionComponent<QueryNeighborsProps> = props =
       graph.setItemState(expandStartId, 'query_start', true);
       isFocus && graph.focusItem(expandStartId);
     };
+    const handleClear = () => {
+      currentRef.current.expandStartId = '';
+      currentRef.current.expandIds = [];
+    };
     //@ts-ignore
-    graph.on('graphin:datachange', handleCallback);
+    graph.on('graphin:datachange', handleDataChange);
+    graph.on('canvas:click', handleClear);
     return () => {
-      graph.off('graphin:datachange', handleCallback);
+      graph.off('graphin:datachange', handleDataChange);
+      graph.off('canvas:click', handleClear);
     };
   }, [isFocus]);
 
@@ -228,7 +234,16 @@ const XlabQueryNeighbors: React.FunctionComponent<QueryNeighborsProps> = props =
     if (repoNodeModels.length + userNodeModels.length + organizationNodeModels.length < selectedNodes.length) {
       items.push(
         // @ts-ignore
-        <Menu.Item key="ONE_HOP-100" eventKey="ONE_HOP-100" onClick={e => handleClick(e, repoNodeModels)}>
+        <Menu.Item
+          key="ONE_HOP-100"
+          eventKey="ONE_HOP-100"
+          onClick={e =>
+            handleClick(
+              e,
+              selectedNodes.map(node => node.getModel()),
+            )
+          }
+        >
           展开一跳关系
         </Menu.Item>,
       );

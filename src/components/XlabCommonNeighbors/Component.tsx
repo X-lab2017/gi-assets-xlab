@@ -40,7 +40,9 @@ const XlabCommonNeighbors: React.FunctionComponent<QueryNeighborsProps> = props 
 
   const handleClick = async (e, models) => {
     const { key } = e;
-    const [type, top] = key.split('-');
+    const keys = key.split(' ');
+    const types = keys.map(k => k.split('-')[0]);
+    const top = keys[0].split('-')[1];
 
     const value = contextmenu.item.getModel();
     graph.setItemState(value.id, 'selected', true);
@@ -53,7 +55,7 @@ const XlabCommonNeighbors: React.FunctionComponent<QueryNeighborsProps> = props 
     });
 
     contextmenu.onClose();
-    await expandNodes(type, top, ids, expandStartId, models);
+    await expandNodes(types, top, ids, expandStartId, models);
   };
 
   const expandNodes = async (type, top, ids, expandStartId, propNodes: any = undefined) => {
@@ -182,6 +184,7 @@ const XlabCommonNeighbors: React.FunctionComponent<QueryNeighborsProps> = props 
     const items: any[] = [];
     if (repoNodeModels.length > 1) {
       items.push(
+        // @ts-ignore
         <Menu.Item
           key="REPOS_COMMON_STAR-100"
           eventKey="REPOS_COMMON_STAR-100"
@@ -189,16 +192,33 @@ const XlabCommonNeighbors: React.FunctionComponent<QueryNeighborsProps> = props 
         >
           仓库共同关注者
         </Menu.Item>,
+        // @ts-ignore
+        <Menu.Item
+          key="REPOS_COMMON_TOPIC-100"
+          eventKey="REPOS_COMMON_TOPIC-100"
+          onClick={e => handleClick(e, repoNodeModels)}
+        >
+          共同主题
+        </Menu.Item>,
       );
     }
     if (userNodeModels.length > 1) {
       items.push(
+        // @ts-ignore
         <Menu.Item
           key="USERS_COMMON_STAR-100"
           eventKey="USERS_COMMON_STAR-100"
           onClick={e => handleClick(e, userNodeModels)}
         >
           用户共同关注的仓库
+        </Menu.Item>,
+        // @ts-ignore
+        <Menu.Item
+          key="USERS_COMMON_PR-100 USERS_COMMON_ISSUE-100"
+          eventKey="USERS_COMMON_PR-100 USERS_COMMON_ISSUE-100"
+          onClick={e => handleClick(e, userNodeModels)}
+        >
+          共同 PR & Issue
         </Menu.Item>,
       );
     }

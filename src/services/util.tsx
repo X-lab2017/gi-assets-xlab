@@ -1,7 +1,6 @@
 import { isArray } from '@antv/util';
-import { message } from 'antd';
 import request from 'umi-request';
-import { utils } from '@antv/gi-sdk';
+import { formatContent } from '../components/util';
 
 export const getStatement = (queryType, startId, limit) => {
   const formatLimit = limit === 'INFINITY' ? 1000 : limit;
@@ -9,31 +8,43 @@ export const getStatement = (queryType, startId, limit) => {
   const idArrStr = `[${idArr.join(',')}]`;
   switch (queryType) {
     case 'REPO_NEW_STAR':
-      return `MATCH(n)<-[r:star]-(m:github_user) where id(n) = ${startId} with m, r.created_at as created_at ORDER by created_at desc LIMIT ${formatLimit} RETURN m`;
-
+      return `MATCH(n)<-[r:star]-(m:github_user) where id(n) =  ${startId} return m, r, r.created_at as created_at ORDER by created_at desc LIMIT ${formatLimit}`;
     case 'REPO_NEW_FORK':
-      return `MATCH(n)<-[r:fork]-(m:github_user) where id(n) = ${startId} with m, r.created_at as created_at ORDER by created_at desc LIMIT ${formatLimit} RETURN m`;
+      return `MATCH(n)<-[r:fork]-(m:github_user) where id(n) =  ${startId} return m, r, r.created_at as created_at ORDER by created_at desc LIMIT ${formatLimit}`;
 
     case 'REPO_NEW_ISSUE':
-      return `MATCH(n)-[r:has_issue]->(m:issue) where id(n) = ${startId} with m, r.created_at as created_at ORDER by created_at desc LIMIT ${formatLimit} RETURN m`;
+      return `MATCH(n)<-[r:has_issue]-(m:issue) where id(n) =  ${startId} return m, r, r.created_at as created_at ORDER by created_at desc LIMIT ${formatLimit}`;
     case 'REPO_IS_ORGANIZATION':
-      return `MATCH(n)<-[r:has_repo]-(m:github_organization) where id(n) = ${startId} RETURN m`;
+      // return `MATCH(n)<-[r:has_repo]-(m:github_organization) where id(n) = ${startId} RETURN m`;
+      return `MATCH(n)<-[r:has_repo]-(m:github_organization) where id(n) =  ${startId} return m, r`;
     case 'REPO_LICENSE_TOPIC':
-      return `MATCH(n)-[r:has_topic|use_license]->(m) where id(n) = ${startId} RETURN m`;
+      // return `MATCH(n)-[r:has_topic|use_license]->(m) where id(n) = ${startId} RETURN m`;
+      return `MATCH(n)-[r:has_topic|use_license]->(m) where id(n) =  ${startId} return m, r`;
     case 'REPOS_COMMON_STAR':
-      return `MATCH(n)<-[r1:star]-(m:github_user)-[r2:star]->(k:github_repo) where id(n) in ${idArrStr} AND id(k) in ${idArrStr} RETURN m, r1, r2, n, k LIMIT ${formatLimit}`;
+      if (idArr.length === 2) {
+        return `MATCH(n:github_repo)<-[r1:star]-(m:github_user)-[r2:star]->(k:github_repo) where id(n) = ${
+          idArr[0]
+        } AND id(k) = ${idArr[1]} RETURN m, r1, r2, n, k LIMIT ${formatLimit * (idArr.length - 1)}`;
+      }
+      return `MATCH(n:github_repo)<-[r1:star]-(m:github_user)-[r2:star]->(k:github_repo) where id(n) in ${idArrStr} AND id(k) in ${idArrStr} RETURN m, r1, r2, n, k LIMIT ${
+        formatLimit * (idArr.length - 1)
+      }`;
 
     case 'ORGANIZATION_HAS_REPO':
-      return `MATCH(n)-[r:has_repo]->(m:github_repo) where id(n) = ${startId} RETURN m`;
+      // return `MATCH(n)-[r:has_repo]->(m:github_repo) where id(n) = ${startId} RETURN m`;
+      return `MATCH(n)-[r:has_repo]->(m:github_repo) where id(n) =  ${startId} return m, r`;
 
     case 'USER_NEW_STAR':
-      return `MATCH(n)-[r:star]->(m:github_repo) where id(n) = ${startId} with m, r.created_at as created_at ORDER by created_at desc LIMIT ${formatLimit} RETURN m`;
+      // return `MATCH(n)-[r:star]->(m:github_repo) where id(n) = ${startId} with m, r.created_at as created_at ORDER by created_at desc LIMIT ${formatLimit} RETURN m`;
+      return `MATCH(n)-[r:star]->(m:github_repo) where id(n) =  ${startId} return m, r, r.created_at as created_at ORDER by created_at desc LIMIT ${formatLimit}`;
     case 'USERS_COMMON_STAR':
-      return `MATCH(n)-[r1:star]->(m:github_repo)<-[r2:star]-(k:github_user) where id(n) in ${idArrStr} AND id(k) in ${idArrStr} RETURN m, r1, r2, n, k LIMIT ${formatLimit}`;
-
+      if (idArr.length === 2) {
+        return `MATCH(n:github_user)-[r1:star]->(m:github_repo)<-[r2:star]-(k:github_user) where id(n) = ${idArr[0]} AND id(k) = ${idArr[1]} RETURN m, r1, r2, n, k LIMIT ${formatLimit}`;
+      }
+      return `MATCH(n:github_user)-[r1:star]->(m:github_repo)<-[r2:star]-(k:github_user) where id(n) in ${idArrStr} AND id(k) in ${idArrStr} RETURN m, r1, r2, n, k LIMIT ${formatLimit}`;
     case 'ONE_HOP':
     default:
-      return `MATCH(n)-[r]-(m) where id(n) = ${startId} RETURN m LIMIT ${formatLimit}`;
+      return `MATCH(n)-[r]-(m) where id(n) = ${startId} RETURN m, r LIMIT ${formatLimit}`;
   }
 };
 
@@ -110,7 +121,7 @@ export function getNodeIdsByEids(params: any): {
       pathIndexList.push(index);
     } else if (item.type === 2) {
       edgeIndexList.push(index);
-    } else if (item.type === 0) {
+    } else if (item.type === 0 && item.name === 'relationshipIds') {
       shortestPathIndexList.push(index);
     }
   });
@@ -211,64 +222,96 @@ export async function cypherQuery(serverUrl, token, subgraph, statement) {
     }),
     timeout: 50000,
     dataType: 'json',
-  }).then(res => {
-    const graphData = JSON.parse(res.result[0]);
-
-    const edges: any = [];
-    graphData.relationships.forEach(item => {
-      const id = `${item.src}_${item.dst}_${item.label_id}_${item.temporal_id}_${item.identity}`;
-      if (edgeIds.includes(id)) {
-        edges.push({
-          id,
-          ...item,
-        });
-      }
-    });
-    return {
-      status: 200,
-      data: {
-        nodes: graphData.nodes,
-        edges,
-      },
-    };
   });
 
-  if (subGraphResponse.status !== 200) {
-    return subGraphResponse.data;
-  }
+  const subgraphData = JSON.parse(subGraphResponse.result[0]);
 
-  const { nodes, edges } = subGraphResponse.data;
+  const subGraphEdges: any = [];
+  subgraphData.relationships.forEach(item => {
+    const id = `${item.src}_${item.dst}_${item.label_id}_${item.temporal_id}_${item.identity}`;
+    if (!edgeIds.includes(id)) return;
+    const edge = {
+      id,
+      ...item,
+      source: String(item.src),
+      target: String(item.dst),
+      edgeType: item.label,
+    };
+    const { created_at } = item.properties || {};
+    if (created_at !== undefined) edge.properties.created_at *= 1000;
+    subGraphEdges.push(edge);
+  });
+
   const graphData = {
-    nodes: nodes.map(node => {
-      const { identity, label, ...others } = node;
-      return {
+    nodes: subgraphData.nodes.map(node => {
+      const { identity, label, nodeType, ...others } = node;
+      const newNode = {
         ...others.properties,
         ...others,
         label,
         nodeType: label,
         id: String(identity),
       };
+      const { name } = others.properties;
+      if (label === 'github_user') {
+        newNode.avatar = `https://avatars.githubusercontent.com/${name}`;
+      } else if (label === 'github_repo') {
+        newNode.avatar = `https://avatars.githubusercontent.com/${identity}`;
+      }
+      return newNode;
     }),
-    edges: edges.map(r => {
-      const { id, label, dst, src, ...others } = r;
-      return {
-        ...others.properties,
-        ...others,
-        id,
-        label,
-        edgeType: label,
-        target: String(dst),
-        source: String(src),
-      };
-    }),
+    edges: subGraphEdges,
     paths,
   };
   return graphData;
+}
 
-  return {
-    nodes: [],
-    edges: [],
-  };
+export async function queryNodes(engineServerURL, ids) {
+  const response = await request(`${engineServerURL}/cypher/get_vertexes?ids=[${ids}]`, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      'content-type': 'application/json',
+    },
+    timeout: 50000,
+    dataType: 'json',
+  });
+  const res = response.map(res => {
+    const { identity, label, ...others } = res[0];
+    const { name } = others.properties;
+    const node = {
+      ...others,
+      label,
+      nodeType: label,
+      id: String(identity),
+      name,
+    };
+    if (label === 'github_user') {
+      node.avatar = `https://avatars.githubusercontent.com/${name}`;
+    } else if (label === 'github_repo') {
+      node.avatar = `https://avatars.githubusercontent.com/${identity}`;
+    }
+    return node;
+  });
+  return res;
+}
+
+export async function getIDsByNames(serverUrl, names, isUser) {
+  const response = await request(`${serverUrl}/api/get_vid`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      name: names,
+      is_user: isUser,
+    }),
+    timeout: 50000,
+    dataType: 'json',
+  });
+
+  return response || {};
 }
 
 export const refreshToken = async (engineServerURL, authorization) => {
@@ -291,5 +334,47 @@ export const refreshToken = async (engineServerURL, authorization) => {
   return {
     data: result.jwt,
     success: true,
+  };
+};
+
+export const queryEdgeSchema = async (engineServerURL, edgeType: string, graphName: string, authorization: string) => {
+  const result = await request(`${engineServerURL}/cypher`, {
+    headers: {
+      'content-type': 'application/json',
+      Authorization: authorization,
+    },
+    method: 'POST',
+    body: JSON.stringify({
+      graph: graphName,
+      script: `CALL db.getEdgeSchema('${edgeType}')`,
+    }),
+    timeout: 50000,
+    dataType: 'json',
+  });
+
+  if (!result?.result) {
+    return;
+  }
+
+  const edgeSchema = result.result;
+  const { constraints, label, properties } = JSON.parse(edgeSchema[0][0]);
+  if (constraints.length === 0) {
+    // 忽略这条信息
+    return null;
+  }
+  const [source, target] = constraints[0];
+
+  const propertiesObj = {} as any;
+  for (const p of properties) {
+    propertiesObj[p.name] = p.type === 'STRING' ? 'string' : 'number';
+  }
+
+  return {
+    sourceNodeType: source,
+    targetNodeType: target,
+    edgeTypeKeyFromProperties: 'edgeType',
+    edgeType: label,
+    label,
+    properties: propertiesObj,
   };
 };

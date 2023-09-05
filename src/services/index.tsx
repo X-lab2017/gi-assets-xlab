@@ -5,6 +5,12 @@ import * as CommonNeighbors from './CommonNeighbors';
 import * as Search from './Search';
 import * as CypherQuery from './CypherQuery';
 import * as Login from './Login';
+import * as getIDByName from './GetIDByName';
+import * as SubNetwork from './SubNetowrk';
+import * as QuerySchema from './Schema';
+import * as CountQuery from './CountQuery';
+import * as QueryNodes from './QueryNodes';
+import * as ShortestPath from './shortestPath';
 import Server from './Server';
 
 export default {
@@ -21,5 +27,11 @@ export default {
     ...Search,
     ...CypherQuery,
     ...Login,
+    ...getIDByName,
+    ...SubNetwork,
+    ...QuerySchema,
+    ...CountQuery,
+    ...QueryNodes,
+    ...ShortestPath,
   },
 };

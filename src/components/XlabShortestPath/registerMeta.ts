@@ -14,9 +14,14 @@ const registerMeta = context => {
     info.services[0],
     engineId,
   );
-  const { options: cypherOptions, defaultValue: cypherDefaultValue } = utils.getServiceOptionsByEngineId(
+  const { options: shortestPathOptions, defaultValue: shortestPathDefaultValue } = utils.getServiceOptionsByEngineId(
     services,
     info.services[1],
+    engineId,
+  );
+  const { options: queryNodesOptions, defaultValue: queryNodesDefaultValue } = utils.getServiceOptionsByEngineId(
+    services,
+    info.services[2],
     engineId,
   );
 
@@ -41,18 +46,25 @@ const registerMeta = context => {
       },
       default: defaultValue,
     },
-    cypherServiceId: {
-      title: $i18n.get({
-        id: 'gi-assets-xlab.components.Search.registerMeta.CypherQueryService',
-        dm: 'Cypher 查询服务',
-      }),
+    shortestPathServiceId: {
+      title: '最短路径查询服务',
       type: 'string',
       'x-decorator': 'FormItem',
       'x-component': 'Select',
       'x-component-props': {
-        options: cypherOptions,
+        options: shortestPathOptions,
       },
-      default: cypherDefaultValue,
+      default: shortestPathDefaultValue,
+    },
+    queryNodesServiceId: {
+      title: '节点查询服务',
+      type: 'string',
+      'x-decorator': 'FormItem',
+      'x-component': 'Select',
+      'x-component-props': {
+        options: queryNodesOptions,
+      },
+      default: queryNodesDefaultValue,
     },
     pathNodeLabel: {
       title: $i18n.get({ id: 'basic.components.PathAnalysis.registerMeta.TagMapping', dm: '标签映射' }),

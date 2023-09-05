@@ -1,18 +1,18 @@
 .gi-xlablayout-left-container {
   position: absolute;
-  left: 16px;
   top: 16px;
+  left: 16px;
   z-index: 1;
   .gi-xlablayout-left-children-wrapper {
-    background: var(--background-color);
-    border-radius: 6px;
-    color: var(--text-color);
+    display: flex;
     width: 100%;
     padding: 0;
+    color: var(--text-color);
     text-align: center;
     list-style: none;
+    background: var(--background-color);
+    border-radius: 6px;
     box-shadow: var(--box-shadow-base);
-    display: flex;
     .gi-xlablayout-left-icon {
       height: 46px;
     }
@@ -20,15 +20,15 @@
 }
 .gi-xlablayout-left-component {
   position: absolute;
-  left: 16px;
   top: 16px;
+  left: 16px;
   z-index: 1;
-  background-color: var(--background-color);
-  box-shadow: var(--box-shadow-base);
-  padding: 16px;
-  border-radius: 8px;
-  overflow-y: scroll;
   max-height: 75%;
+  padding: 16px;
+  overflow-y: scroll;
+  background-color: var(--background-color);
+  border-radius: 8px;
+  box-shadow: var(--box-shadow-base);
 }
 .gi-xlablayout-main-canvas-container {
   width: 100%;
@@ -36,8 +36,8 @@
 .gi-xlablayout-bottom-container {
   position: absolute;
   bottom: 0;
-  text-align: center;
   width: 100%;
+  text-align: center;
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 .gi-xlablayout-right-container {

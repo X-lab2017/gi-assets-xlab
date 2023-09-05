@@ -1,9 +1,8 @@
 import { Icon, useContext, utils } from '@antv/gi-sdk';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useComponents from './useComponents';
 import { isString } from '@antv/util';
-import { Button, Tooltip, message } from 'antd';
-import { useEffect } from 'react';
+import { Button, Spin, Tooltip, message } from 'antd';
 import './index.less';
 
 export interface XlabLayoutProps {
@@ -14,46 +13,22 @@ export interface XlabLayoutProps {
   padding: string;
   containers: any[];
   children: React.ReactNode[];
-  serviceId?: string;
 }
 
 const XlabLayout: React.FunctionComponent<XlabLayoutProps> = props => {
-  const { children, serviceId } = props;
-  const { config, assets, HAS_GRAPH, graph, data: graphData, services } = useContext();
+  const { children } = props;
+  const { config, assets, HAS_GRAPH, data: graphData, services } = useContext();
 
-  const [currentLeftComponent, setCurrentLeftComponent] = useState('');
+  const [currentLeftComponentId, setCurrentLeftComponentId] = useState('');
   const [hasData, setHasData] = useState(false);
   const [bottomVisible, setBottomVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const loginService = utils.getService(services, serviceId);
-
-  // 登陆
   useEffect(() => {
-    (async () => {
-      if (!loginService) {
-        message.error('未配置登陆服务');
-        return;
-      }
-      const result = await loginService();
-      if (!result.data) {
-        message.error('登陆失败，请确认正确连接内网');
-        return;
-      }
-      console.log('result', result);
-      const token = `Bearer ${result.data}`;
-      utils.setServerEngineContext({
-        ENGINE_USER_TOKEN: token,
-      });
-    })();
+    utils.setServerEngineContext({
+      engineServerURL: 'http://47.110.125.80',
+    });
   }, []);
-
-  useEffect(() => {
-    if (!graph || graph.destroyed) return;
-    graph.on('canvas:click', handleCanvasClick);
-    return () => {
-      graph.off('canvas:click', handleCanvasClick);
-    };
-  }, [graph]);
 
   useEffect(() => {
     setHasData(!!graphData?.nodes?.length);
@@ -84,7 +59,12 @@ const XlabLayout: React.FunctionComponent<XlabLayoutProps> = props => {
   const LeftContent = useComponents(leftItems, ComponentCfgMap, assets.components);
   const leftChildren = LeftContent.map((item: any) => {
     return {
-      icon: <Icon type={item.icon} onClick={() => handleLeftToolbarClick(item.id)} />,
+      icon: (
+        <Icon
+          type={item.icon}
+          onClick={() => setCurrentLeftComponentId(currentLeftComponentId === item.id ? '' : item.id)}
+        />
+      ),
       key: item.id,
       item: HAS_GRAPH && item.children,
       props: item.props,
@@ -107,27 +87,18 @@ const XlabLayout: React.FunctionComponent<XlabLayoutProps> = props => {
     };
   });
 
-  const handleLeftToolbarClick = id => {
-    if (!id) setCurrentLeftComponent('');
-    const child = leftChildren.find(item => item.key === id);
-    if (!child || !child.item) return;
-    const { item } = child;
-    item.props.visible = true;
-    setCurrentLeftComponent(item);
-  };
-
-  const handleCanvasClick = () => setCurrentLeftComponent('');
-
   const sortedComponents = leftChildren.sort((a, b) => a.props?.GI_CONTAINER_INDEX - b.props?.GI_CONTAINER_INDEX);
   const leftPositionStyles = utils.getPositionStyles('LT', offset);
   const toolbarTop = Number(leftPositionStyles.top.replace('px', ''));
   const mainWidth = hasData ? `calc(100% - ${rightWidth + rightPadding * 2}px)` : '100%';
 
   return (
-    <div style={{ width: '100%', height: '100%', display: 'flex' }}>
+    <div style={{ width: '100%', height: '100%', display: 'flex' }} data-tut="gi_xlab_node">
+      {loading ? <Spin className="gi-xlabsearch-loading-first" size="large" /> : ''}
       <div
         className="gi-xlablayout-left-container"
         style={{ ...leftPositionStyles, visibility: hasData ? 'visible' : 'hidden' }}
+        data-tut="gi_xlab_left_container"
       >
         <ul className="gi-xlablayout-left-children-wrapper">
           {sortedComponents.map(child => {
@@ -139,7 +110,14 @@ const XlabLayout: React.FunctionComponent<XlabLayoutProps> = props => {
             return (
               <span>
                 <Tooltip title={title} placement="bottom">
-                  <Button type="text" className="gi-xlablayout-left-icon" key={itemId}>
+                  <Button
+                    type="text"
+                    className="gi-xlablayout-left-icon"
+                    key={itemId}
+                    style={{
+                      color: currentLeftComponentId === itemId ? 'var(--primary-color)' : 'unset',
+                    }}
+                  >
                     {icon}
                   </Button>
                 </Tooltip>
@@ -148,22 +126,27 @@ const XlabLayout: React.FunctionComponent<XlabLayoutProps> = props => {
           })}
         </ul>
       </div>
-      {currentLeftComponent ? (
+      {leftChildren.map(child => (
         <div
           className="gi-xlablayout-left-component"
-          style={{ ...leftPositionStyles, top: `${toolbarTop + 50}px`, width: leftWidth }}
+          style={{
+            ...leftPositionStyles,
+            top: `${toolbarTop + 50}px`,
+            width: leftWidth,
+            display: currentLeftComponentId === child.key ? 'block' : 'none',
+          }}
         >
-          {currentLeftComponent}
+          {child.item}
         </div>
-      ) : (
-        ''
-      )}
+      ))}
       <div style={{ width: mainWidth }}>
         <div
+          data-tut="gi_xlab_context_menu"
           className="gi-xlablayout-main-canvas-container"
           style={{ height: `calc(100% - ${bottomHeight + bottomPadding}px)` }}
         >
           {children}
+          {/* {virtualDOM} */}
         </div>
         <div
           className="gi-xlablayout-bottom-container"
@@ -187,6 +170,7 @@ const XlabLayout: React.FunctionComponent<XlabLayoutProps> = props => {
           visibility: hasData ? 'visible' : 'hidden',
           position: hasData ? 'unset' : 'absolute',
         }}
+        data-tut="gi_xlab_right_container"
       >
         {rightChildren.map(child => child.item)}
       </div>
