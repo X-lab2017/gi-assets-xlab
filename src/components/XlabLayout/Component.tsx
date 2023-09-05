@@ -26,12 +26,13 @@ const XlabLayout: React.FunctionComponent<XlabLayoutProps> = props => {
 
   useEffect(() => {
     utils.setServerEngineContext({
-      engineServerURL: 'http://47.110.125.80',
+      engineServerURL: 'http://osgraph.tugraph.com.cn',
     });
   }, []);
 
   useEffect(() => {
-    setHasData(!!graphData?.nodes?.length);
+    const hasNode = !!graphData?.nodes?.length;
+    setHasData(hasNode);
     const hasTimeEdge = graphData.edges?.find(
       edge => edge.created_at !== undefined || edge.properties?.created_at !== undefined,
     );

@@ -82,7 +82,6 @@ export const XlabSubNetwork = {
         })
         .filter(Boolean);
     }
-
     return data;
   },
 };
