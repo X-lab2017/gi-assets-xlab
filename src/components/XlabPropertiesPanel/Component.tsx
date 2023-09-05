@@ -5,7 +5,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Empty, Tooltip, message } from 'antd';
 import Overview from './Overview';
-import { COLORS, createChart, getMappedSize, getTypeNodeModels, DETAIL_SCHEMA_TYPES } from './util';
+import { COLORS, createChart, getTypeNodeModels, DETAIL_SCHEMA_TYPES } from './util';
 import $i18n from '../../i18n';
 import './index.less';
 
@@ -67,13 +67,6 @@ const XlabPropertiesPanel = props => {
     Comments: ['comments'],
     Commits: ['commits'],
   };
-
-  // const USER_DETAIL_FIELDS = {
-  //   Fork: ['fork'],
-  //   Issue: ['issue'],
-  //   PR: ['pr'],
-  //   Star: ['star'],
-  // }
 
   const STATIC_FIELD = {
     OpenRank: 'openrank',
@@ -244,15 +237,20 @@ const XlabPropertiesPanel = props => {
     destroyChart('edgeType', overviewRefs.edgeType);
     const showModels = selectedItems.nodes
       .map(item => {
-        const { id, properties, nodeType, name } = item.getModel();
+        const { id, pid, properties, nodeType, name } = item.getModel();
         const showProperties = {
           name,
           nodeType,
           ...properties,
+          pid,
           id,
         };
         Object.keys(showProperties).forEach(field => {
           if (showProperties[field] === null) delete showProperties[field];
+          if (['closed_at', 'created_at'].includes(field)) {
+            const date = new Date(showProperties[field] * 1000);
+            showProperties[field] = date.toLocaleDateString();
+          }
         });
         return showProperties;
       })
@@ -324,67 +322,71 @@ const XlabPropertiesPanel = props => {
       {models.length ? (
         <>
           <div className="gi-xlab-panel-detail-wrapper">
-            {models.map(model => (
-              <div
-                className={
-                  models?.length === 1
-                    ? 'gi-xlab-panel-detail-one'
-                    : 'gi-xlab-panel-detail-one gi-xlab-panel-detail-multi'
-                }
-                onMouseEnter={evt => handleHighlightChart(evt, model)}
-                onMouseLeave={handleUnhighlightChart}
-              >
-                <img
-                  className="gi-xlab-panel-detail-title"
-                  src={`https://avatars.githubusercontent.com/${
-                    model.nodeType === 'github_user' ? model.name : model.id
-                  }`}
-                ></img>
-                <Tooltip title={model.name || model.id}>
-                  <p className={`gi-xlab-panel-detail-item`}>
-                    {colorMap[model.id] ? (
-                      <span className="gi-xlab-panel-detail-color-dot" style={{ background: colorMap[model.id] }} />
-                    ) : (
-                      ''
-                    )}
-                    <a
-                      href={`https://github.com/${model.name}`}
-                      target="_blank"
-                      className={`gi-xlab-panel-detail-title ${
-                        !model.name ? 'gi-xlab-panel-detail-title-disabled' : ''
-                      }`}
-                    >
-                      {model.name || model.id}
-                    </a>
-                  </p>
-                </Tooltip>
-                <div className="gi-xlab-panel-detail-properties-wrapper">
-                  {userInfos[model.id]
-                    ? Object.keys(userInfos[model.id]).map(field => (
-                        <Tooltip title={`${field}: ${userInfos[model.id][field]}`}>
-                          <p
-                            className="gi-xlab-panel-detail-item"
-                            onClick={() => handleCopyText(userInfos[model.id][field])}
-                          >
-                            {field}: {userInfos[model.id][field]}
-                          </p>
-                        </Tooltip>
-                      ))
-                    : ''}
-                  {Object.keys(model)
-                    .map(field =>
-                      ['name', 'id', 'nodeType'].includes(field) ? undefined : (
-                        <Tooltip title={`${field}: ${model[field]}`}>
-                          <p className="gi-xlab-panel-detail-item" onClick={() => handleCopyText(model[field])}>
-                            {field}: {model[field]}
-                          </p>
-                        </Tooltip>
-                      ),
-                    )
-                    .filter(Boolean)}
+            {models.map(model => {
+              const { id, nodeType, name, pid } = model;
+              const url = DETAIL_SCHEMA_TYPES.includes(nodeType) ? `https://github.com/${name}` : undefined;
+              return (
+                <div
+                  className={
+                    models?.length === 1
+                      ? 'gi-xlab-panel-detail-one'
+                      : 'gi-xlab-panel-detail-one gi-xlab-panel-detail-multi'
+                  }
+                  onMouseEnter={evt => handleHighlightChart(evt, model)}
+                  onMouseLeave={handleUnhighlightChart}
+                >
+                  {DETAIL_SCHEMA_TYPES.includes(nodeType) ? (
+                    <img
+                      className="gi-xlab-panel-detail-title"
+                      src={`https://avatars.githubusercontent.com/${nodeType === 'github_user' ? name : id}`}
+                    />
+                  ) : (
+                    ''
+                  )}
+                  <Tooltip title={name || id}>
+                    <p className={`gi-xlab-panel-detail-item`}>
+                      {colorMap[id] ? (
+                        <span className="gi-xlab-panel-detail-color-dot" style={{ background: colorMap[id] }} />
+                      ) : (
+                        ''
+                      )}
+                      <a
+                        href={url}
+                        target="_blank"
+                        className={`gi-xlab-panel-detail-title ${!url ? 'gi-xlab-panel-detail-title-disabled' : ''}`}
+                      >
+                        {name || id}
+                      </a>
+                    </p>
+                  </Tooltip>
+                  <div className="gi-xlab-panel-detail-properties-wrapper">
+                    {userInfos[id]
+                      ? Object.keys(userInfos[id]).map(field => (
+                          <Tooltip title={`${field}: ${userInfos[id][field]}`}>
+                            <p
+                              className="gi-xlab-panel-detail-item"
+                              onClick={() => handleCopyText(userInfos[id][field])}
+                            >
+                              {field}: {userInfos[id][field]}
+                            </p>
+                          </Tooltip>
+                        ))
+                      : ''}
+                    {Object.keys(model)
+                      .map(field =>
+                        ['name', 'id', 'nodeType', 'pid'].includes(field) ? undefined : (
+                          <Tooltip title={`${field}: ${model[field]}`}>
+                            <p className="gi-xlab-panel-detail-item" onClick={() => handleCopyText(model[field])}>
+                              {field}: {model[field]}
+                            </p>
+                          </Tooltip>
+                        ),
+                      )
+                      .filter(Boolean)}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {loading ? (

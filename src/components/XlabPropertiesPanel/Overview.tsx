@@ -100,10 +100,11 @@ const Overview = props => {
         });
         await Promise.all(promises);
       } else {
-        const endMonthStr = String(endDate.getMonth() + 1);
+        const endMonthStr = String(endDate.getMonth());
         const dateKey =
-          timeRange === 'latest'
-            ? '2023-07'
+          // @ts-ignore
+          timeRange === 'latest' || !isFinite(timeRange[0])
+            ? '2023-08'
             : `${endDate.getFullYear()}-${endMonthStr.length < 2 ? 0 : ''}${endMonthStr}`;
         const urls: any = [];
         nodes.forEach(({ id, name, nodeType }) => {
@@ -127,16 +128,17 @@ const Overview = props => {
         });
         await Promise.all(
           urls.map(async ({ id, name, nodeType, url }) => {
+            const nodeKey = `${name}(${id})`;
+            cachedStateicData[nodeKey] = cachedStateicData[nodeKey] || {};
             let rankData;
             try {
               const resp = await fetch(url);
               rankData = await resp.json();
             } catch (e) {
+              cachedStateicData[nodeKey][rankingDimension] = {};
               return rankData;
             }
             if (rankData.ok === false) return rankData;
-            const nodeKey = `${name}(${id})`;
-            cachedStateicData[nodeKey] = cachedStateicData[nodeKey] || {};
             cachedStateicData[nodeKey][rankingDimension] = rankData;
             if (!rankData) {
               rankingData[nodeType].push({
@@ -159,6 +161,7 @@ const Overview = props => {
         );
       }
 
+      // map nodes' size
       DETAIL_SCHEMA_TYPES.forEach(nodeType => {
         const sizes = getMappedSize(rankingData[nodeType], 'ranking', 'dataId');
         Object.keys(sizes).forEach(dataId => {
@@ -286,6 +289,9 @@ const Overview = props => {
 
   useEffect(() => {
     if (!graph || graph.destroyed) return;
+    if (data.nodes.length === 1) {
+      setRankingType(data.nodes[0].nodeType === 'github_user' ? 'github_user' : 'github_repo');
+    }
     // 更换概览图表
     const nodeTypeMap: any = {};
     const edgeTypeMap: any = {};
@@ -390,6 +396,7 @@ const Overview = props => {
               <Segmented
                 size="small"
                 block
+                // @ts-ignore
                 onChange={setRankingType}
                 options={[
                   {

@@ -305,7 +305,7 @@ export async function getIDsByNames(serverUrl, names, isUser) {
     },
     body: JSON.stringify({
       name: names,
-      is_user: isUser,
+      is_user: !!isUser,
     }),
     timeout: 50000,
     dataType: 'json',

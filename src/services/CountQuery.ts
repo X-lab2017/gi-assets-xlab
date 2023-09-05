@@ -8,7 +8,7 @@ export const XlabCountQuery = {
     // const { isDetail = true } = params as any;
     const { engineServerURL } = utils.getServerEngineContext();
     // engineServerURL
-    const response = await request(`http://47.110.125.80/procedure/count_detail`, {
+    const response = await request(`http://osgraph.tugraph.com.cn/procedure/count_detail`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',

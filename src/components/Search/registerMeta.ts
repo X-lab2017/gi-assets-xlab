@@ -49,7 +49,7 @@ const registerMeta = context => {
   );
   const { options: getSubGraphOptions, defaultValue: GetSubGraphDefaultValue } = utils.getServiceOptionsByEngineId(
     services,
-    info.services[4],
+    info.services[5],
     engineId,
   );
   return {

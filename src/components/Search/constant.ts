@@ -47,7 +47,7 @@ export const templates = [
     color: '#108ee9',
     isUser: true,
     searchHolder: '请输入用户名（多选）',
-    actions: ['search', 'commonNeighbors', 'clustering', 'userSubGarph', 'neighbors'],
+    actions: ['search', 'commonNeighbors', 'clustering', 'userSubGraph', 'neighbors'],
     img: 'https://mdn.alipayobjects.com/huamei_qa8qxu/afts/img/A*IjtKQLG-0TMAAAAAAAAAAAAADmJ7AQ/original',
     demos: [
       {
@@ -61,6 +61,22 @@ export const templates = [
         title: 'Jake Wharton 成长史',
         userNames: ['JakeWharton', 'jessewilson'],
         repoNames: [],
+      },
+    ],
+  },
+  {
+    id: 'org',
+    title: '组织发展',
+    color: '#55acee',
+    img: 'https://mdn.alipayobjects.com/huamei_qa8qxu/afts/img/A*tTaoSbHxDLYAAAAAAAAAAAAADmJ7AQ/original',
+    isUser: false,
+    allowCustom: false,
+    actions: ['search', 'subRepos'],
+    demos: [
+      {
+        id: 'history-xlab',
+        title: 'X-lab 发展',
+        orgIds: ['197394006', '258952472', '595940829'],
       },
     ],
   },

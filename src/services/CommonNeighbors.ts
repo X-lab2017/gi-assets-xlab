@@ -72,6 +72,7 @@ export const XlabCommonNeighbors = {
             label,
             nodeType: label,
             name: rest.properties?.name,
+            pid: rest.properties?.id,
             ...rest,
           };
           if (label === 'github_user') {

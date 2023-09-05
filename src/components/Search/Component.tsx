@@ -187,7 +187,7 @@ const XlabSearch = props => {
     });
   };
 
-  const queryNeighbors = (nodes, types, limit, resGraphData) => {
+  const queryNeighbors = (nodes, types, limit, resGraphData, callback) => {
     if (!neighborsService || !nodes?.length || !types?.length) return [];
     return types.map(async type => {
       const res = await neighborsService({
@@ -196,6 +196,7 @@ const XlabSearch = props => {
         type,
         top: limit,
       });
+      await callback?.(res);
       resGraphData.nodes = resGraphData.nodes.concat(res.nodes);
       resGraphData.edges = resGraphData.edges.concat(res.edges);
       return res;
@@ -203,7 +204,7 @@ const XlabSearch = props => {
   };
 
   const onDemoChange = async demo => {
-    const { repoNames, userNames, repoIds: propsRepoIds, userIds: propsUserIds, actions } = demo;
+    const { repoNames, userNames, repoIds: propsRepoIds, userIds: propsUserIds, orgIds = [], actions } = demo;
     if (!getIdService) {
       message.warn('查询 Demo 失败，未配置 ID 查询服务');
       return;
@@ -226,20 +227,21 @@ const XlabSearch = props => {
       if (idData.idsMap) userIds = Object.values(idData.idsMap);
     }
 
-    if (!repoIds.length && !userIds.length) {
+    if (!repoIds.length && !userIds.length && !orgIds.length) {
       message.warn('未查询到相关节点');
       return;
     }
 
     const repoNodes = await queryNodesService({ ids: repoIds });
     const userNodes = await queryNodesService({ ids: userIds });
-    if (!repoNodes.length && !userNodes.length) {
+    const orgNodes = await queryNodesService({ ids: orgIds });
+    if (!repoNodes.length && !userNodes.length && !orgNodes.length) {
       setLoading(false);
       message.error('未找到节点');
       return;
     }
     const resGraphData: any = {
-      nodes: [...repoNodes, ...userNodes],
+      nodes: [...repoNodes, ...userNodes, ...orgNodes],
       edges: [],
     };
 
@@ -271,7 +273,7 @@ const XlabSearch = props => {
         case 'search':
           break;
         case 'repoSubGraph':
-        case 'userSubGarph':
+        case 'userSubGraph':
           if (!subGraphService) return;
           const subGraphResult = await subGraphService({
             names: repoNames,
@@ -282,6 +284,28 @@ const XlabSearch = props => {
           resGraphData.edges = [...resGraphData.edges, ...subGraphResult.edges];
           promises.push(subGraphResult);
           break;
+        case 'subRepos': {
+          const subRepoPromises = queryNeighbors(
+            orgNodes,
+            ['ORGANIZATION_HAS_REPO'],
+            getLimit(orgNodes),
+            resGraphData,
+            async res => {
+              if (!subGraphService) return;
+              const subRepos = res.nodes.filter(node => node.nodeType === 'github_repo');
+              const subGraphResult = await subGraphService({
+                names: subRepos.map(repo => repo.name),
+                ids: subRepos.map(repo => repo.id),
+                networkName: 'developer_network',
+              });
+              resGraphData.nodes = [...resGraphData.nodes, ...subGraphResult.nodes];
+              resGraphData.edges = [...resGraphData.edges, ...subGraphResult.edges];
+              promises.push(subGraphResult);
+            },
+          );
+          promises = promises.concat(subRepoPromises);
+          break;
+        }
         case 'neighbors':
           const repoNeighborPromises = queryNeighbors(
             repoNodes,
@@ -337,7 +361,7 @@ const XlabSearch = props => {
       {firstSearch ? (
         <Row className="gi-xlabsearch-template-wrapper" justify={'center'}>
           {templates.map(template => (
-            <Col span={8}>
+            <Col span={6}>
               <TemplateCard info={template} onDemoChange={onDemoChange} searchService={searchService} />
             </Col>
           ))}
