@@ -131,13 +131,16 @@ const XlabPropertiesPanel = props => {
 
       const userNode = getTypeNodeModels(models, ['github_user']) || [];
       const infos = {};
-      const userInfoPromises: Promise<any>[] = userNode.map(async model => {
-        const response = await fetch(`https://oss.x-lab.info/open_digger/github/${model.name}/meta.json`);
-        const fetchedData = await response.json();
-        const { bio, location, company } = fetchedData.info;
-        infos[model.id] = { '📝 bio': bio, '📍 location': location, '🏠 company': company };
-        return fetchedData;
-      });
+      const userInfoPromises: Promise<any>[] = userNode
+        .map(async model => {
+          const response = await fetch(`https://oss.x-lab.info/open_digger/github/${model.name}/meta.json`);
+          if (response.ok === false) return;
+          const fetchedData = await response.json();
+          const { bio, location, company } = fetchedData.info;
+          infos[model.id] = { '📝 bio': bio, '📍 location': location, '🏠 company': company };
+          return fetchedData;
+        })
+        .filter(Boolean);
 
       const staticPromises: Promise<any>[] = repoUserModels
         .map(async ({ id, name }) => {
@@ -163,6 +166,9 @@ const XlabPropertiesPanel = props => {
             }
             try {
               const response = await fetch(`https://oss.x-lab.info/open_digger/github/${name}/${key}.json`);
+              if (response.ok === false) {
+                return;
+              }
               const fetchedData = await response.json();
               cachedStateicData[modelKey] = cachedStateicData[modelKey] || {};
               cachedStateicData[modelKey][key] = fetchedData;
@@ -184,6 +190,7 @@ const XlabPropertiesPanel = props => {
             }
           });
         })
+        .filter(Boolean)
         .flat();
       await Promise.all([...promises, ...userInfoPromises, ...staticPromises]);
 
