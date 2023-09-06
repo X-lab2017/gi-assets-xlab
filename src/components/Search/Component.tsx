@@ -187,7 +187,7 @@ const XlabSearch = props => {
     });
   };
 
-  const queryNeighbors = (nodes, types, limit, resGraphData, callback) => {
+  const queryNeighbors = (nodes, types, limit, resGraphData, callback = (resData: any) => {}) => {
     if (!neighborsService || !nodes?.length || !types?.length) return [];
     return types.map(async type => {
       const res = await neighborsService({
